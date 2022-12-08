@@ -79,7 +79,7 @@ public class EncoderMecanum implements Component {
         params.add(new double[]{distanceIN, motorPower});
     }
 
-    private void drive(@NonNull goFunction direction, double distanceIN, double motorPower) throws InterruptedException {
+    private void drive(@NonNull goFunction direction, double distanceIN, double motorPower) {
 //        ElapsedTime timer = new ElapsedTime();
 //        double proportional, integral = 0, derivative, pid, prevError = 0;
         double totalTicks = PULSES_PER_IN * distanceIN;
@@ -127,7 +127,7 @@ public class EncoderMecanum implements Component {
     }
 
     @Override
-    public void update() throws InterruptedException {
+    public void update() {
         if (isTeleOp) {
             mecanum.update();
             return;
@@ -157,7 +157,7 @@ public class EncoderMecanum implements Component {
 
     private double calculateMotorPower(int currentPositionTicks, double maxPower, double totalDistanceTicks) {
         double motorPower = ((-4.0 * maxPower) / Math.pow(totalDistanceTicks, 2.0)) * Math.pow(totalDistanceTicks / 4.0 - currentPositionTicks, 2.0) + maxPower;
-        if (motorPower < 0.1) this.isRunning = false;
+        this.isRunning = motorPower >= 0.1;
         return motorPower;
     }
 

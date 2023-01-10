@@ -48,7 +48,7 @@ public class Arm implements Component {
         rightArm.setDirection(DcMotorSimple.Direction.FORWARD);
         leftArm.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.PULSES_PER_REVOLUTION = 384.5; // gobilda 5202 435 rpm
+        this.PULSES_PER_REVOLUTION = 145.1; // gobilda 5202 1150 rpm
         this.LOWER_BOUND = (int) (lowerBound * PULSES_PER_REVOLUTION);
         this.ZERO_POSITION = (int) (zeroPosition * PULSES_PER_REVOLUTION);
         this.GROUND_JUNCTION = (int) (groundJunction * PULSES_PER_REVOLUTION);

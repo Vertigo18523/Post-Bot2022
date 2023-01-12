@@ -109,11 +109,12 @@ public class MainOp extends BaseOpMode {
             } else if (robot.arm.getCurrentPosition() > robot.arm.UPPER_BOUND) {
                 robot.arm.move(robot.arm.UPPER_BOUND - (int) (robot.arm.PULSES_PER_REVOLUTION * 0.014));
             } else {
-                robot.arm.move((int) ((gamepad2.right_trigger - gamepad2.left_trigger) * robot.arm.PULSES_PER_REVOLUTION * 0.278) + robot.arm.getCurrentPosition(), gamepad2.right_trigger - gamepad2.left_trigger);
+                robot.arm.move((int) ((gamepad2.right_trigger - gamepad2.left_trigger) * robot.arm.PULSES_PER_REVOLUTION * 0.5) + robot.arm.getCurrentPosition(), gamepad2.right_trigger - gamepad2.left_trigger);
             }
         }
 
         robot.mecanum.drive(x * speed, y * speed, rot * speed);
+        telemetry.addData("Raw", robot.arm.getTelemetry());
         telemetry.update();
     }
 }

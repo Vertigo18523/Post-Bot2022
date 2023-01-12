@@ -95,7 +95,7 @@ public class Arm implements Component {
 
     @Override
     public String getTelemetry() {
-        return this.telemetry.toString();
+        return "Left: " + leftArm.getCurrentPosition() + " Right: " + rightArm.getCurrentPosition();
     }
 
     public void toZero() {
@@ -134,6 +134,9 @@ public class Arm implements Component {
         MotorPower = motorPower;
         TotalTicks = position;
         StartingPosition = getCurrentPosition();
+        if (getCurrentPosition() + 10 > position) { // if going down
+            MotorPower *= 0.5;
+        }
         if (!isTeleOp) {
             while (isBusy()) {
                 setPower(MotorPower);

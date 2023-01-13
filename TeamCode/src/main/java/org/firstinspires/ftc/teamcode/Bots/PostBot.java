@@ -41,7 +41,7 @@ public class PostBot extends Robot {
                 0.096,
                 0.388,
                 0.975,
-                1.930,
+                2.068,
                 3.277,
                 5.462,
                 7.672,

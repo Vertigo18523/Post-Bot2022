@@ -55,6 +55,9 @@ public class MainOp extends BaseOpMode {
         gamepadListener2.dd.onPress = () -> {
             robot.arm.toPickup();
         };
+        gamepadListener2.dr.onPress = () -> {
+            robot.arm.toSideStack();
+        };
         gamepadListener2.b.onPress = () -> {
             robot.arm.toLow();
         };

@@ -41,6 +41,7 @@ public class PostBot extends Robot {
                 0.096,
                 0.388,
                 0.975,
+                1.930,
                 3.277,
                 5.462,
                 7.672,
@@ -84,6 +85,7 @@ public class PostBot extends Robot {
             odo.strafeDir = Odometry.EncoderDirection.FORWARD;
             odo.rightDir = Odometry.EncoderDirection.FORWARD;
             this.pidMecanum = new PIDMecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", odo);
+            this.pidMecanum.positionTolerance = 0.5;
             this.pursuit = new PurePursuit(pidMecanum, odo);
             addComponents(pursuit, pidMecanum);
         }

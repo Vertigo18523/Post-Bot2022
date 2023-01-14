@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Components.Camera;
 import org.firstinspires.ftc.teamcode.Components.EncoderMecanum;
 import org.firstinspires.ftc.teamcode.Components.Grabber;
 import org.firstinspires.ftc.teamcode.Components.Mecanum;
+import org.firstinspires.ftc.teamcode.Components.OdoMecanum;
 import org.firstinspires.ftc.teamcode.Components.Odometry;
 import org.firstinspires.ftc.teamcode.Components.PIDMecanum;
 import org.firstinspires.ftc.teamcode.Components.PurePursuit;
@@ -25,6 +26,7 @@ public class PostBot extends Robot {
 //    public EncoderMecanum encoderMecanum;
     public AutoMecanum encoderMecanum;
     public PIDMecanum pidMecanum;
+    public OdoMecanum odoMecanum;
     public Odometry odo;
     public PurePursuit pursuit;
 
@@ -89,14 +91,36 @@ public class PostBot extends Robot {
             odo.leftDir = Odometry.EncoderDirection.REVERSE;
             odo.strafeDir = Odometry.EncoderDirection.REVERSE;
             odo.rightDir = Odometry.EncoderDirection.REVERSE;
-            this.pidMecanum = new PIDMecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", odo);
-            this.pidMecanum.positionTolerance = 0.5;
-            this.pidMecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);
-            this.pidMecanum.fr.setDirection(DcMotorSimple.Direction.FORWARD);
-            this.pidMecanum.bl.setDirection(DcMotorSimple.Direction.REVERSE);
-            this.pidMecanum.br.setDirection(DcMotorSimple.Direction.FORWARD);
-            this.pursuit = new PurePursuit(pidMecanum, odo);
-            addComponents(pursuit, pidMecanum);
+//            this.pidMecanum = new PIDMecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", odo);
+//            this.pidMecanum.positionTolerance = 0.5;
+//            this.pidMecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);
+//            this.pidMecanum.fr.setDirection(DcMotorSimple.Direction.FORWARD);
+//            this.pidMecanum.bl.setDirection(DcMotorSimple.Direction.REVERSE);
+//            this.pidMecanum.br.setDirection(DcMotorSimple.Direction.FORWARD);
+//            this.pursuit = new PurePursuit(pidMecanum, odo);
+//            addComponents(pursuit, pidMecanum);
+            this.odoMecanum = new OdoMecanum(
+                    opMode,
+                    "frontLeft",
+                    "frontRight",
+                    "backLeft",
+                    "backRight",
+                    hardwareMap,
+                    telemetry,
+                    false,
+                    0.8,
+                    0.5,
+                    10.5,
+                    12.5,
+                    1.1,
+                    100,
+                    false,
+                    0,
+                    0,
+                    0,
+                    odo
+            );
+            addComponents(odoMecanum);
         }
 
         addComponents(camera, grabber, arm);

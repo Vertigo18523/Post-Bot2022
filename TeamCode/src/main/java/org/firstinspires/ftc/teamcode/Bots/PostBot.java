@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -50,6 +51,10 @@ public class PostBot extends Robot {
         this.grabber = new Grabber(opMode, "grabber", hardwareMap, telemetry);
         if (isTeleOp) {
             this.mecanum = new Mecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", telemetry);
+            this.mecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.mecanum.fr.setDirection(DcMotorSimple.Direction.FORWARD);
+            this.mecanum.bl.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.mecanum.br.setDirection(DcMotorSimple.Direction.FORWARD);
             addComponents(mecanum);
         } else {
             /*
@@ -81,11 +86,15 @@ public class PostBot extends Robot {
 //                    );
 //            addComponents(encoderMecanum);
             this.odo = new Odometry(hardwareMap, "backRight", "frontLeft", "frontRight");
-            odo.leftDir = Odometry.EncoderDirection.FORWARD;
-            odo.strafeDir = Odometry.EncoderDirection.FORWARD;
-            odo.rightDir = Odometry.EncoderDirection.FORWARD;
+            odo.leftDir = Odometry.EncoderDirection.REVERSE;
+            odo.strafeDir = Odometry.EncoderDirection.REVERSE;
+            odo.rightDir = Odometry.EncoderDirection.REVERSE;
             this.pidMecanum = new PIDMecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", odo);
             this.pidMecanum.positionTolerance = 0.5;
+            this.pidMecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.pidMecanum.fr.setDirection(DcMotorSimple.Direction.FORWARD);
+            this.pidMecanum.bl.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.pidMecanum.br.setDirection(DcMotorSimple.Direction.FORWARD);
             this.pursuit = new PurePursuit(pidMecanum, odo);
             addComponents(pursuit, pidMecanum);
         }

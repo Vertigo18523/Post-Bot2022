@@ -15,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Base.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Base.Robot;
-import org.firstinspires.ftc.teamcode.Bots.PostBot;
 import org.firstinspires.ftc.teamcode.Components.Mecanum;
 import org.firstinspires.ftc.teamcode.Components.Odometry;
 import org.firstinspires.ftc.teamcode.RMath.Util;
@@ -80,14 +79,14 @@ public class PIDCalibration extends BaseOpMode {
     public static double frictionTuningStep = 0.0005;
     public static double acceleration = 0;
 
-    public Telemetry telemetry;
+    public Telemetry telemetryy;
 
     public Robot setRobot() {
 
-        driveBot = new PostBot() {
+        driveBot = new Robot() {
             @Override
-            protected void mapHardware(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opMode, boolean isTeleOp) {
-                drivetrain = new Mecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight",telemetry);
+            protected void mapHardware(HardwareMap hardwareMap, Telemetry telemetryy, LinearOpMode opMode, boolean isTeleOp) {
+                drivetrain = new Mecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight",telemetryy);
                 drivetrain.fl.setDirection(DcMotorSimple.Direction.REVERSE);
                 drivetrain.fr.setDirection(DcMotorSimple.Direction.FORWARD);
                 drivetrain.bl.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -112,7 +111,7 @@ public class PIDCalibration extends BaseOpMode {
 
     @Override
     public void onInit() {
-        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        telemetryy = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         forwardDiff = new Differentiator(1, 0, true);
         forwardPID = new PIDController(0, 0, 0);
@@ -150,9 +149,9 @@ public class PIDCalibration extends BaseOpMode {
                 curserPos = (int) Util.loop(curserPos, 0, options.length);
                 options[curserPos] += " <";
 
-                telemetry.addLine("Use 'up' and 'down' to select a mode and press 'a'");
+                telemetryy.addLine("Use 'up' and 'down' to select a mode and press 'a'");
                 for (String s : options) {
-                    telemetry.addLine(s);
+                    telemetryy.addLine(s);
                 }
 
                 if (pressed) {
@@ -161,9 +160,9 @@ public class PIDCalibration extends BaseOpMode {
                         try {
                             readFrictionValues();
                         }catch (Exception e){
-                            telemetry.clearAll();
-                            telemetry.addLine("Please calibrate friction first");
-                            telemetry.update();
+                            telemetryy.clearAll();
+                            telemetryy.addLine("Please calibrate friction first");
+                            telemetryy.update();
                             sleep(5000);
                             tuningState = TuningState.SELECTING;
                         }
@@ -188,15 +187,15 @@ public class PIDCalibration extends BaseOpMode {
                         PIDTuner.kD = 0;
 
                     case 1:
-                        telemetry.addLine("Tune the PID values");
-                        telemetry.addLine("Press 'b' to move to other position");
-                        telemetry.addLine("Press 'a' when finished");
+                        telemetryy.addLine("Tune the PID values");
+                        telemetryy.addLine("Press 'b' to move to other position");
+                        telemetryy.addLine("Press 'a' when finished");
 
                         final double targetPosition = positionToggle.toggle() ? forwardTuningDist : 0;
                         final double error = targetPosition - forwardPos;
 
-                        telemetry.addData("Error", error);
-                        telemetry.addData("Y Power", yPower);
+                        telemetryy.addData("Error", error);
+                        telemetryy.addData("Y Power", yPower);
 
                         forwardPID.kP = PIDTuner.kP;
                         forwardPID.kI = PIDTuner.kI;
@@ -214,10 +213,10 @@ public class PIDCalibration extends BaseOpMode {
                         break;
 
                     case 2:
-                        telemetry.addData("kP", forwardPID.kP);
-                        telemetry.addData("kI", forwardPID.kI);
-                        telemetry.addData("kD", forwardPID.kD);
-                        telemetry.addLine("Press 'a' to write to file, press 'b' to cancel");
+                        telemetryy.addData("kP", forwardPID.kP);
+                        telemetryy.addData("kI", forwardPID.kI);
+                        telemetryy.addData("kD", forwardPID.kD);
+                        telemetryy.addLine("Press 'a' to write to file, press 'b' to cancel");
 
                         if (pressed) {
                             File file = AppUtil.getInstance().getSettingsFile("forwardPID.txt");
@@ -254,14 +253,14 @@ public class PIDCalibration extends BaseOpMode {
                         PIDTuner.kD = 0;
 
                     case 1:
-                        telemetry.addLine("Tune the PID values");
-                        telemetry.addLine("Press 'b' to move to other position");
-                        telemetry.addLine("Press 'a' when finished");
+                        telemetryy.addLine("Tune the PID values");
+                        telemetryy.addLine("Press 'b' to move to other position");
+                        telemetryy.addLine("Press 'a' when finished");
 
                         final double targetPosition = positionToggle.toggle() ? strafeTuningDist : 0;
                         final double error = targetPosition - strafePos;
-                        telemetry.addData("Error", error);
-                        telemetry.addData("X Power", xPower);
+                        telemetryy.addData("Error", error);
+                        telemetryy.addData("X Power", xPower);
 
                         strafePID.kP = PIDTuner.kP;
                         strafePID.kI = PIDTuner.kI;
@@ -278,10 +277,10 @@ public class PIDCalibration extends BaseOpMode {
                         break;
 
                     case 2:
-                        telemetry.addData("kP", strafePID.kP);
-                        telemetry.addData("kI", strafePID.kI);
-                        telemetry.addData("kD", strafePID.kD);
-                        telemetry.addLine("Press 'a' to write to file, press 'b' to cancel");
+                        telemetryy.addData("kP", strafePID.kP);
+                        telemetryy.addData("kI", strafePID.kI);
+                        telemetryy.addData("kD", strafePID.kD);
+                        telemetryy.addLine("Press 'a' to write to file, press 'b' to cancel");
 
                         xPower = 0;
 
@@ -313,14 +312,14 @@ public class PIDCalibration extends BaseOpMode {
                         if (positionToggle.toggle()) positionToggle.get(true);
 
                     case 1:
-                        telemetry.addLine("Tune the PID values");
-                        telemetry.addLine("Press 'b' to move to other position");
-                        telemetry.addLine("Press 'a' when finished");
+                        telemetryy.addLine("Tune the PID values");
+                        telemetryy.addLine("Press 'b' to move to other position");
+                        telemetryy.addLine("Press 'a' when finished");
 
                         final double targetPosition = positionToggle.toggle() ? rotTuningDist : 0;
                         final double error = targetPosition - odo.getRotation();
-                        telemetry.addData("Error", error);
-                        telemetry.addData("Turn Power", angularPower);
+                        telemetryy.addData("Error", error);
+                        telemetryy.addData("Turn Power", angularPower);
 
                         rotPID.kP = PIDTuner.kP;
                         rotPID.kI = PIDTuner.kI;
@@ -337,10 +336,10 @@ public class PIDCalibration extends BaseOpMode {
                         break;
 
                     case 2:
-                        telemetry.addData("kP", rotPID.kP);
-                        telemetry.addData("kI", rotPID.kI);
-                        telemetry.addData("kD", rotPID.kD);
-                        telemetry.addLine("Press 'a' to write to file, press 'b' to cancel");
+                        telemetryy.addData("kP", rotPID.kP);
+                        telemetryy.addData("kI", rotPID.kI);
+                        telemetryy.addData("kD", rotPID.kD);
+                        telemetryy.addLine("Press 'a' to write to file, press 'b' to cancel");
 
                         if (pressed) {
                             File file = AppUtil.getInstance().getSettingsFile("rotPID.txt");
@@ -365,7 +364,7 @@ public class PIDCalibration extends BaseOpMode {
 
                 switch (step) {
                     case 0:
-                        telemetry.addLine("Press 'a' to start tuning forward friction");
+                        telemetryy.addLine("Press 'a' to start tuning forward friction");
                         drivetrain.drive(gamepad1);
                         if (pressed) {
                             step++;
@@ -380,8 +379,8 @@ public class PIDCalibration extends BaseOpMode {
                         yPower += frictionTuningStep;
                         buffer++;
                         forwardDiff.update(odo.getForwardDist());
-                        telemetry.addLine("Tuning forward static friction");
-                        telemetry.addData("Power", yPower);
+                        telemetryy.addLine("Tuning forward static friction");
+                        telemetryy.addData("Power", yPower);
                         drivetrain.drive(0, yPower * (13 / getBatteryVoltage()), 0);
 
                         if (forwardDiff.getDerivative(1) > 0.5 && buffer > 100) {
@@ -396,7 +395,7 @@ public class PIDCalibration extends BaseOpMode {
 
                         yPower -= frictionTuningStep;
                         forwardDiff.update(odo.getForwardDist());
-                        telemetry.addLine("Tuning forward kinetic friction");
+                        telemetryy.addLine("Tuning forward kinetic friction");
                         drivetrain.drive(0, yPower * (13 / getBatteryVoltage()), 0);
 
                         if (forwardDiff.getDerivative(1) <= 0.2) {
@@ -408,7 +407,7 @@ public class PIDCalibration extends BaseOpMode {
                         break;
 
                     case 3:
-                        telemetry.addLine("Press 'a' to start tuning strafe friction");
+                        telemetryy.addLine("Press 'a' to start tuning strafe friction");
                         drivetrain.drive(gamepad1);
                         if (pressed) {
                             step++;
@@ -423,8 +422,8 @@ public class PIDCalibration extends BaseOpMode {
                         xPower += frictionTuningStep;
                         buffer++;
                         strafeDiff.update(odo.getStrafeDist());
-                        telemetry.addLine("Tuning strafe static friction");
-                        telemetry.addData("Power", xPower);
+                        telemetryy.addLine("Tuning strafe static friction");
+                        telemetryy.addData("Power", xPower);
                         drivetrain.drive(xPower * (13 / getBatteryVoltage()), 0, 0);
 
                         if (strafeDiff.getDerivative(1) > 0.5 && buffer > 100) {
@@ -439,7 +438,7 @@ public class PIDCalibration extends BaseOpMode {
 
                         xPower -= frictionTuningStep;
                         strafeDiff.update(odo.getStrafeDist());
-                        telemetry.addLine("Tuning strafe kinetic friction");
+                        telemetryy.addLine("Tuning strafe kinetic friction");
                         drivetrain.drive(xPower * (13 / getBatteryVoltage()), 0, 0);
 
                         if (strafeDiff.getDerivative(1) <= 0.2) {
@@ -451,7 +450,7 @@ public class PIDCalibration extends BaseOpMode {
                         break;
 
                     case 6:
-                        telemetry.addLine("Press 'a' to start tuning rotational friction");
+                        telemetryy.addLine("Press 'a' to start tuning rotational friction");
                         drivetrain.drive(gamepad1);
                         if (pressed) {
                             step++;
@@ -466,9 +465,9 @@ public class PIDCalibration extends BaseOpMode {
                         angularPower += frictionTuningStep;
                         buffer++;
                         rotDiff.update(odo.getRotation());
-                        telemetry.addLine("Tuning rotation static friction");
-                        telemetry.addData("Power", angularPower);
-                        telemetry.addData("Velocity", Math.abs(rotDiff.getDerivative(1)));
+                        telemetryy.addLine("Tuning rotation static friction");
+                        telemetryy.addData("Power", angularPower);
+                        telemetryy.addData("Velocity", Math.abs(rotDiff.getDerivative(1)));
                         drivetrain.drive(0, 0, angularPower * (13 / getBatteryVoltage()));
 
                         if (Math.abs(rotDiff.getDerivative(1)) > 5 && buffer > 100) {
@@ -483,7 +482,7 @@ public class PIDCalibration extends BaseOpMode {
 
                         angularPower -= frictionTuningStep;
                         rotDiff.update(odo.getRotation());
-                        telemetry.addLine("Tuning rotation kinetic friction");
+                        telemetryy.addLine("Tuning rotation kinetic friction");
                         drivetrain.drive(0, 0, angularPower * (13 / getBatteryVoltage()));
 
                         if (Math.abs(rotDiff.getDerivative(1)) <= 2) {
@@ -496,13 +495,13 @@ public class PIDCalibration extends BaseOpMode {
 
                     case 9:
 
-                        telemetry.addData("staticFrictionForward", staticFrictionForward);
-                        telemetry.addData("kineticFrictionForward", kineticFrictionForward);
-                        telemetry.addData("staticFrictionStrafe", staticFrictionStrafe);
-                        telemetry.addData("kineticFrictionStrafe", kineticFrictionStrafe);
-                        telemetry.addData("staticFrictionRotation", staticFrictionRotation);
-                        telemetry.addData("kineticFrictionRotation", kineticFrictionRotation);
-                        telemetry.addLine("Press 'a' to write to file, press 'b' to cancel");
+                        telemetryy.addData("staticFrictionForward", staticFrictionForward);
+                        telemetryy.addData("kineticFrictionForward", kineticFrictionForward);
+                        telemetryy.addData("staticFrictionStrafe", staticFrictionStrafe);
+                        telemetryy.addData("kineticFrictionStrafe", kineticFrictionStrafe);
+                        telemetryy.addData("staticFrictionRotation", staticFrictionRotation);
+                        telemetryy.addData("kineticFrictionRotation", kineticFrictionRotation);
+                        telemetryy.addLine("Press 'a' to write to file, press 'b' to cancel");
 
                         if (pressed) {
                             File file = AppUtil.getInstance().getSettingsFile("friction.txt");
@@ -525,7 +524,7 @@ public class PIDCalibration extends BaseOpMode {
         }
 
 
-        telemetry.update();
+        telemetryy.update();
     }
 
     private void resetEncoders() {

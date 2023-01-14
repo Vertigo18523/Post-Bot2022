@@ -91,36 +91,37 @@ public class PostBot extends Robot {
             odo.leftDir = Odometry.EncoderDirection.REVERSE;
             odo.strafeDir = Odometry.EncoderDirection.REVERSE;
             odo.rightDir = Odometry.EncoderDirection.REVERSE;
-//            this.pidMecanum = new PIDMecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", odo);
-//            this.pidMecanum.positionTolerance = 0.5;
-//            this.pidMecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);
-//            this.pidMecanum.fr.setDirection(DcMotorSimple.Direction.FORWARD);
-//            this.pidMecanum.bl.setDirection(DcMotorSimple.Direction.REVERSE);
-//            this.pidMecanum.br.setDirection(DcMotorSimple.Direction.FORWARD);
+            this.pidMecanum = new PIDMecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", odo);
+            this.pidMecanum.positionTolerance = 0.5;
+            this.pidMecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.pidMecanum.fr.setDirection(DcMotorSimple.Direction.FORWARD);
+            this.pidMecanum.bl.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.pidMecanum.br.setDirection(DcMotorSimple.Direction.FORWARD);
+            addComponents(pidMecanum);
 //            this.pursuit = new PurePursuit(pidMecanum, odo);
-//            addComponents(pursuit, pidMecanum);
-            this.odoMecanum = new OdoMecanum(
-                    opMode,
-                    "frontLeft",
-                    "frontRight",
-                    "backLeft",
-                    "backRight",
-                    hardwareMap,
-                    telemetry,
-                    false,
-                    0.8,
-                    0.5,
-                    10.5,
-                    12.5,
-                    1.1,
-                    100,
-                    false,
-                    0,
-                    0,
-                    0,
-                    odo
-            );
-            addComponents(odoMecanum);
+//            addComponents(pursuit);
+//            this.odoMecanum = new OdoMecanum(
+//                    opMode,
+//                    "frontLeft",
+//                    "frontRight",
+//                    "backLeft",
+//                    "backRight",
+//                    hardwareMap,
+//                    telemetry,
+//                    false,
+//                    0.5,
+//                    0.5,
+//                    10.5,
+//                    12.5,
+//                    1.1,
+//                    100,
+//                    false,
+//                    0,
+//                    0,
+//                    0,
+//                    odo
+//            );
+//            addComponents(odoMecanum);
         }
 
         addComponents(camera, grabber, arm);

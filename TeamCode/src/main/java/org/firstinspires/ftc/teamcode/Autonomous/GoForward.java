@@ -23,11 +23,9 @@ public class GoForward extends BaseOpMode {
 
     @Override
     public void onStart() throws InterruptedException {
-        robot.pursuit.addPoint(0, 0, 0.0).setLookahead(10d);
-//                .addAction(() -> {
-//                    robot.arm.toHigh();
-//                }, true);
-        robot.pursuit.addPoint(0, 24, 0);
-        robot.pursuit.move();
+//        robot.pursuit.addPoint(-10, 10, 0);
+//        robot.pursuit.move();
+//        robot.pidMecanum.drive(0, 10, 0);
+        robot.odoMecanum.driveForward(24);
     }
 }

@@ -16,7 +16,7 @@ public class Grabber implements Component {
     public double OPEN;
     public double CLOSED;
 
-    public boolean isGrabbing = false;
+    public boolean isGrabbing;
 
     public Grabber(LinearOpMode opMode, String deviceName, HardwareMap hardwareMap, Telemetry telemetry) {
         grabber = hardwareMap.get(Servo.class, deviceName);

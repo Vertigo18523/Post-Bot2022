@@ -40,12 +40,9 @@ public class PurePursuitSample extends CommandOpMode {
         // create our drive object
         m_robotDrive = new MecanumDrive(fL, fR, bL, bR);
 
-//        leftEncoder = new MotorEx(hardwareMap, "backRight");
-//        rightEncoder = new MotorEx(hardwareMap, "frontRight");
-//        centerEncoder = new MotorEx(hardwareMap, "frontLeft");
-        leftEncoder = fR;
-        rightEncoder = bR;
+        leftEncoder = bR;
         centerEncoder = fL;
+        rightEncoder = fR;
 
         // calculate multiplier
 //        TICKS_TO_INCHES = WHEEL_DIAMETER * Math.PI / leftEncoder.getCPR();
@@ -66,7 +63,7 @@ public class PurePursuitSample extends CommandOpMode {
                 new StartWaypoint(0, 0),
 //                new GeneralWaypoint(24, 0, 0.8, 0.8, 30)
                 new EndWaypoint(
-                        12, 0, 0, 0.5,
+                        0, 12, 0, 0.5,
                         0.5, 30, 0.8, 1
                 )
         );

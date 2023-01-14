@@ -131,7 +131,7 @@ public class OdoMecanum implements Component {
 
     @Override
     public String getTelemetry() {
-        return null;
+        return "Current: " + getCurrentPosition() + "\nTarget: " + getTargetPosition();
     }
 
     private void setRunToPosition() {
@@ -330,7 +330,7 @@ public class OdoMecanum implements Component {
         drive(this::goTurnRight, (int) (TURN_CONSTANT * degrees), motorPower);
     }
 
-    private interface goFunction {
+    public interface goFunction {
         void run(int distanceTicks);
     }
 

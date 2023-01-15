@@ -144,7 +144,7 @@ public class Camera implements Component {
             double maxPercent = Math.max(yelPercent, Math.max(cyaPercent, magPercent));
 
             if (maxPercent == yelPercent) {
-                position = ParkingPosition.LEFT;
+                position = ParkingPosition.RIGHT;
                 Imgproc.rectangle(
                         input,
                         sleeve_pointA,
@@ -162,7 +162,7 @@ public class Camera implements Component {
                         2
                 );
             } else if (maxPercent == magPercent) {
-                position = ParkingPosition.RIGHT;
+                position = ParkingPosition.LEFT;
                 Imgproc.rectangle(
                         input,
                         sleeve_pointA,

@@ -31,7 +31,7 @@ public class PostBot extends Robot {
     public PurePursuit pursuit;
 
     @Override
-    protected void mapHardware(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opMode, boolean isTeleOp) {
+    public void mapHardware(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opMode, boolean isTeleOp) {
         this.isTeleOp = isTeleOp;
         this.camera = new Camera(opMode, "Webcam 1", hardwareMap, telemetry);
         this.arm = new Arm(

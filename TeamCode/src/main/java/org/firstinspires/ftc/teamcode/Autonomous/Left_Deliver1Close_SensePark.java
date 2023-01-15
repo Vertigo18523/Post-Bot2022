@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Base.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Base.Robot;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Bots.PostBot;
 import org.firstinspires.ftc.teamcode.Components.Camera;
 
 @Autonomous
+@Disabled
 public class Left_Deliver1Close_SensePark extends BaseOpMode {
     public PostBot robot;
 

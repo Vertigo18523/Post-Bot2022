@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.drive.RRMecanum;
 public class Right_Deliver1Close_SensePark extends BaseOpMode {
     public PostBot robot;
     public RRMecanum drive;
-    public Trajectory toPole;//, left, right, center;
+    public Trajectory toPole, forward, backward, left, right, center;
 
     Camera.ParkingPosition parkingPosition;
 
@@ -43,6 +43,21 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
                 .splineTo(new Vector2d(29, 32), 0)
                 .splineTo(new Vector2d(34, 36), 0)
                 .build();
+        forward = drive.trajectoryBuilder(toPole.end())
+                .splineTo(new Vector2d(36, 36),0)
+                .build();
+        backward = drive.trajectoryBuilder(forward.end())
+                .splineTo(new Vector2d(30, 36), 0)
+                .build();
+        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+                .forward(12)
+                .build();
+        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+                .forward(60)
+                .build();
+        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+                .forward(36)
+                .build();
         robot.camera.requestStart();
         robot.grabber.close();
     }
@@ -50,28 +65,43 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
     @Override
     public void onStart() throws InterruptedException {
         parkingPosition = robot.camera.getParkingPosition();
-        robot.arm.toGround();
         state = 0;
+        robot.arm.toGround();
+        drive.followTrajectory(toPole);
+        robot.arm.toHigh();
+        drive.followTrajectory(forward);
+        robot.arm.toHigh();
+        robot.grabber.open();
+        drive.followTrajectory(backward);
+        robot.arm.toZero();
+        drive.turn(Math.toRadians(270));
+        if (parkingPosition == Camera.ParkingPosition.LEFT) {
+            drive.followTrajectory(left);
+        } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
+            drive.followTrajectory(right);
+        } else {
+            drive.followTrajectory(center);
+        }
     }
 
-    @Override
-    public void onUpdate() throws InterruptedException {
-        switch (state) {
-            case 0:
-                if (!drive.isBusy()) {
-                    drive.followTrajectoryAsync(toPole);
-                    state++;
-                }
-                break;
-            case 1:
-                state++;
-                robot.arm.toHigh();
-                break;
-            case 2:
-                break;
-            case 100:
-                break;
-        }
-        drive.update();
-    }
+//    @Override
+//    public void onUpdate() throws InterruptedException {
+//        switch (state) {
+//            case 0:
+//                if (!drive.isBusy()) {
+//                    drive.followTrajectoryAsync(toPole);
+//                    state++;
+//                }
+//                break;
+//            case 1:
+//                state++;
+//                robot.arm.toHigh();
+//                break;
+//            case 2:
+//                break;
+//            case 100:
+//                break;
+//        }
+//        drive.update();
+//    }
 }

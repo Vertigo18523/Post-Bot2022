@@ -41,7 +41,7 @@ public class PostBot extends Robot {
                 telemetry,
                 isTeleOp,
                 -0.026,
-                0.096,
+                0.048,
                 0.388,
                 0.975,
                 2.068,

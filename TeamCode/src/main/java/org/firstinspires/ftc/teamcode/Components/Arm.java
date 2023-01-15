@@ -141,7 +141,7 @@ public class Arm implements Component {
         MotorPower = motorPower;
         TotalTicks = position;
         StartingPosition = getCurrentPosition();
-        if (getCurrentPosition() + 10 > position) { // if going down
+        if (getCurrentPosition() + 10 > position && getCurrentPosition() > SIDE_STACK) { // if going down
             MotorPower *= 0.5;
         }
         if (!isTeleOp) {

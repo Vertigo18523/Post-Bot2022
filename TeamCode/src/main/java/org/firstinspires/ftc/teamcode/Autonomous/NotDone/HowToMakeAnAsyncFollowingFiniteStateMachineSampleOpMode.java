@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.NotDone;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Bots.PostBot;
@@ -30,7 +29,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.drive.RRMecanum;
  * opmode only serves as an initial starting point.
  */
 @Autonomous(group = "advanced")
-public class AsyncFollowingFSM extends LinearOpMode {
+public class HowToMakeAnAsyncFollowingFiniteStateMachineSampleOpMode extends LinearOpMode {
     public PostBot bot;
 
     // This enum defines our "state"

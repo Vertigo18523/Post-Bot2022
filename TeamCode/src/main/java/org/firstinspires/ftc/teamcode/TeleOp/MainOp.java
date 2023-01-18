@@ -47,6 +47,7 @@ public class MainOp extends BaseOpMode {
         };
 
         gamepadListener2.lb.onPress = () -> {
+            robot.grabber.open();
             robot.arm.toZero();
         };
         gamepadListener2.a.onPress = () -> {

@@ -37,16 +37,22 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
         drive = new RRMecanum(hardwareMap);
         Pose2d startPose = new Pose2d();
         drive.setPoseEstimate(startPose);
-        toPole = drive.trajectoryBuilder(startPose)
+        toPole = drive.trajectoryBuilder(startPose, 20,3)
                 .splineTo(new Vector2d(12, 21), 0)
                 .splineTo(new Vector2d(29, 24), 0)
                 .splineTo(new Vector2d(29, 32), 0)
-                .splineTo(new Vector2d(34, 36), 0)
+                .addDisplacementMarker(() -> {
+                    robot.arm.toHigh();
+                })
+                .splineTo(new Vector2d(34, 35), 0)
                 .build();
-        forward = drive.trajectoryBuilder(toPole.end())
-                .splineTo(new Vector2d(36, 36),0)
+        forward = drive.trajectoryBuilder(toPole.end(),20,5)
+                .splineTo(new Vector2d(35.5, 35),0)
+                .addDisplacementMarker(() -> {
+                    robot.grabber.open();
+                })
                 .build();
-        backward = drive.trajectoryBuilder(forward.end())
+        backward = drive.trajectoryBuilder(forward.end(),true)
                 .splineTo(new Vector2d(30, 36), 0)
                 .build();
         left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
@@ -70,11 +76,9 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
         drive.followTrajectory(toPole);
         robot.arm.toHigh();
         drive.followTrajectory(forward);
-        robot.arm.toHigh();
-        robot.grabber.open();
         drive.followTrajectory(backward);
         robot.arm.toZero();
-        drive.turn(Math.toRadians(270));
+        drive.turn(Math.toRadians(90));
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
             drive.followTrajectory(left);
         } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {

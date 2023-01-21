@@ -94,6 +94,13 @@ public class Mecanum implements Component {
         polarDrive(speed, direction, rightStickX);
     }
 
+    public void rectDrive(double x, double y, double rot) {
+        flPower = y + x + rot * 0.7;
+        frPower = y - x - rot * 0.7;
+        blPower = y - x + rot;
+        brPower = y + x - rot;
+    }
+
     @Override
     public void init() {
 

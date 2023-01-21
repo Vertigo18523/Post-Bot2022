@@ -87,7 +87,7 @@ public class Camera implements Component {
         return isRunning;
     }
 
-    public void requestStart() {
+    public OpenCvCamera requestStart() {
         camera.setPipeline(new SleeveDetection());
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -101,6 +101,8 @@ public class Camera implements Component {
             public void onError(int errorCode) {
             }
         });
+
+        return camera;
     }
 
     public void requestStop() {

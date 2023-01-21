@@ -145,6 +145,15 @@ public class RRMecanum extends MecanumDrive {
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
 
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double maxVelocity, double maxAcceleration) {
+        MinVelocityConstraint myVelConstraint = new MinVelocityConstraint(Arrays.asList(
+                new AngularVelocityConstraint(maxAcceleration),
+                new MecanumVelocityConstraint(maxVelocity, TRACK_WIDTH)
+        ));
+        ProfileAccelerationConstraint myAccelConstraint = new ProfileAccelerationConstraint(maxAcceleration);
+        return new TrajectoryBuilder(startPose, myVelConstraint, myAccelConstraint);
+    }
+
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }

@@ -148,7 +148,7 @@ public class Arm implements Component {
             while (isBusy()) {
                 setPower(MotorPower);
             }
-            setPower(0);
+            //setPower(0);
         }
     }
 

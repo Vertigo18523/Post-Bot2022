@@ -38,30 +38,27 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
         Pose2d startPose = new Pose2d();
         drive.setPoseEstimate(startPose);
         toPole = drive.trajectoryBuilder(startPose, 20,3)
-                .splineTo(new Vector2d(12, 21), 0)
+                .splineTo(new Vector2d(12, 20), 0)
                 .splineTo(new Vector2d(29, 24), 0)
                 .splineTo(new Vector2d(29, 32), 0)
-                .addDisplacementMarker(() -> {
-                    robot.arm.toHigh();
-                })
-                .splineTo(new Vector2d(34, 35), 0)
+                //.addDisplacementMarker(() -> {
+                    //robot.arm.toHigh();
+                //})
+                .splineTo(new Vector2d(31, 36), 0)
                 .build();
-        forward = drive.trajectoryBuilder(toPole.end(),20,5)
-                .splineTo(new Vector2d(35.5, 35),0)
-                .addDisplacementMarker(() -> {
-                    robot.grabber.open();
-                })
+        forward = drive.trajectoryBuilder(toPole.end(),20,3)
+                .splineTo(new Vector2d(33, 36),0)
                 .build();
         backward = drive.trajectoryBuilder(forward.end(),true)
-                .splineTo(new Vector2d(30, 36), 0)
+                .splineTo(new Vector2d(31, 36), 0)
                 .build();
-        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
                 .forward(12)
                 .build();
-        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
                 .forward(60)
                 .build();
-        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
                 .forward(36)
                 .build();
         robot.camera.requestStart();
@@ -73,9 +70,11 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
         parkingPosition = robot.camera.getParkingPosition();
         state = 0;
         robot.arm.toGround();
+        robot.grabber.close();
         drive.followTrajectory(toPole);
         robot.arm.toHigh();
         drive.followTrajectory(forward);
+        robot.grabber.open();
         drive.followTrajectory(backward);
         robot.arm.toZero();
         drive.turn(Math.toRadians(90));

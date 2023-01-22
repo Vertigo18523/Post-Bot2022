@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.drive.RRMecanum;
 public class Right_Deliver1Close_SensePark extends BaseOpMode {
     public PostBot robot;
     public RRMecanum drive;
-    public Trajectory toPole, forward, backward, left, right, center;
+    public Trajectory toPole, backward, left, right, center;
 
     Camera.ParkingPosition parkingPosition;
 
@@ -37,31 +37,31 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
         drive = new RRMecanum(hardwareMap);
         Pose2d startPose = new Pose2d();
         drive.setPoseEstimate(startPose);
-        toPole = drive.trajectoryBuilder(startPose, 20,3)
-                .splineTo(new Vector2d(12, 21), 0)
-                .splineTo(new Vector2d(29, 24), 0)
-                .splineTo(new Vector2d(29, 32), 0)
+        toPole = drive.trajectoryBuilder(new Pose2d(-66, -36, 0))
+                .splineTo(new Vector2d(-54, -13), 0)
+                .splineToConstantHeading(new Vector2d(-38, -12), 0)
                 .addDisplacementMarker(() -> {
                     robot.arm.toHigh();
                 })
-                .splineTo(new Vector2d(34, 35), 0)
-                .build();
-        forward = drive.trajectoryBuilder(toPole.end(),20,5)
-                .splineTo(new Vector2d(35.5, 35),0)
+                .splineToConstantHeading(new Vector2d(-34, 0), 0)
+                .forward(3)
                 .addDisplacementMarker(() -> {
                     robot.grabber.open();
                 })
                 .build();
-        backward = drive.trajectoryBuilder(forward.end(),true)
-                .splineTo(new Vector2d(30, 36), 0)
+        backward = drive.trajectoryBuilder(toPole.end())
+                .back(10)
+                .addDisplacementMarker(() -> {
+                    robot.arm.toZero();
+                })
                 .build();
-        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
                 .forward(12)
                 .build();
-        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
                 .forward(60)
                 .build();
-        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(270))))
+        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
                 .forward(36)
                 .build();
         robot.camera.requestStart();
@@ -74,10 +74,7 @@ public class Right_Deliver1Close_SensePark extends BaseOpMode {
         state = 0;
         robot.arm.toGround();
         drive.followTrajectory(toPole);
-        robot.arm.toHigh();
-        drive.followTrajectory(forward);
         drive.followTrajectory(backward);
-        robot.arm.toZero();
         drive.turn(Math.toRadians(90));
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
             drive.followTrajectory(left);

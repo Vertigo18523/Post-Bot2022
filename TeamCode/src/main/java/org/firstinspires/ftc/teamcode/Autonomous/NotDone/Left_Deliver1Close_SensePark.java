@@ -51,10 +51,10 @@ public class Left_Deliver1Close_SensePark extends BaseOpMode {
                 .back(7.5)
                 .build();
         left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(0))), 30, 3)
-                .strafeLeft(9.5)
+                .strafeLeft(60.5)
                 .build();
         right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(0))), 30, 3)
-                .strafeLeft(60.5)
+                .strafeLeft(9.5)
                 .build();
         center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(0))), 30, 3)
                 .strafeLeft(36.5)

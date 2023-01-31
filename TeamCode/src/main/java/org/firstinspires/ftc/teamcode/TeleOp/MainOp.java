@@ -73,6 +73,10 @@ public class MainOp extends BaseOpMode {
             robot.grabber.toggle();
         };
 
+        gamepadListener1.x.onPress = () -> {
+            robot.arm.init();
+        };
+
 //        gamepadListener2.dr.onPress = () -> {
 //            robot.arm.toZero();
 //            sleep(100);
@@ -108,9 +112,10 @@ public class MainOp extends BaseOpMode {
         }
 
         if (gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0) {
-            if (robot.arm.getCurrentPosition() < robot.arm.LOWER_BOUND) {
-                robot.arm.move(robot.arm.LOWER_BOUND + (int) (robot.arm.PULSES_PER_REVOLUTION * 0.014));
-            } else if (robot.arm.getCurrentPosition() > robot.arm.UPPER_BOUND) {
+//            if (robot.arm.getCurrentPosition() < robot.arm.LOWER_BOUND) {
+//                robot.arm.move(robot.arm.LOWER_BOUND + (int) (robot.arm.PULSES_PER_REVOLUTION * 0.014));
+//            } else
+            if (robot.arm.getCurrentPosition() > robot.arm.UPPER_BOUND) {
                 robot.arm.move(robot.arm.UPPER_BOUND - (int) (robot.arm.PULSES_PER_REVOLUTION * 0.014));
             } else {
                 robot.arm.move((int) ((gamepad2.right_trigger - gamepad2.left_trigger) * robot.arm.PULSES_PER_REVOLUTION * 0.5) + robot.arm.getCurrentPosition(), gamepad2.right_trigger - gamepad2.left_trigger);

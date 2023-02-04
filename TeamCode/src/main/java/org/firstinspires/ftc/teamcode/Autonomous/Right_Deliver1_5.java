@@ -73,7 +73,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
         drive.followTrajectory(forward);
         drive.followTrajectory(backward);
         drive.turn(Math.toRadians(180) - 1e-6);
-        for(int i=0; i<6; i++){
+        for(int i=0; i<5; i++){
             if(i == 0){
                 robot.arm.toSideStack();
                 drive.followTrajectory(coneStack);
@@ -134,7 +134,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 drive.followTrajectory(forward);
                 robot.grabber.open();
                 drive.followTrajectory(backward);
-            } else if(i == 4){
+            } else {
                 robot.arm.move(robot.arm.PICKUP);
                 drive.followTrajectory(coneStack);
 
@@ -149,14 +149,14 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 drive.followTrajectory(forward);
                 robot.grabber.open();
                 drive.followTrajectory(backward);
-            } else{
-                if (parkingPosition == Camera.ParkingPosition.LEFT) {
-                    drive.followTrajectory(left);
-                } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
-                    drive.followTrajectory(right);
-                } else {
-                    drive.followTrajectory(center);
-                }
+            }
+
+            if (parkingPosition == Camera.ParkingPosition.LEFT) {
+                drive.followTrajectory(left);
+            } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
+                drive.followTrajectory(right);
+            } else {
+                drive.followTrajectory(center);
             }
         }
 

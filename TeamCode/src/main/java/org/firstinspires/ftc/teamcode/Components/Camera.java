@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -17,14 +18,14 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
-
+@Config
 public class Camera implements Component {
-    private static final int
-            X = 205,
-            Y = 150,
-            W = 20,
-            H = 50;
-    private static final Scalar
+    public static int
+            X = 165,
+            Y = 175,
+            W = 50,
+            H = 20;
+    private static Scalar
             lower_yellow_bounds = new Scalar(100, 100, 0, 255),
             upper_yellow_bounds = new Scalar(255, 255, 200, 255),
             lower_cyan_bounds = new Scalar(0, 100, 100, 255),

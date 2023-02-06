@@ -37,10 +37,10 @@ public class Right_Deliver1_5 extends BaseOpMode {
         drive = new RRMecanum(hardwareMap);
         Pose2d startPose = new Pose2d();
         drive.setPoseEstimate(startPose);
-        toPole = drive.trajectoryBuilder(startPose, 20,3)
+        toPole = drive.trajectoryBuilder(startPose, 20, 3)
                 .splineTo(new Vector2d(60, 0), Math.toRadians(0))
                 .build();
-        forward = drive.trajectoryBuilder(toPole.end().plus(new Pose2d(0, 0, Math.toRadians(90))),20,3)
+        forward = drive.trajectoryBuilder(toPole.end().plus(new Pose2d(0, 0, Math.toRadians(90))), 20, 3)
                 .forward(1)
                 .build();
         backward = drive.trajectoryBuilder(forward.end())
@@ -49,16 +49,16 @@ public class Right_Deliver1_5 extends BaseOpMode {
         coneStack = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(180))))
                 .forward(12)
                 .build();
-        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))),30,3)
-                .splineToConstantHeading(new Vector2d(38,0))
-                .splineToConstantheading(new Vector2d(38,38))
+        left = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))), 30, 3)
+                .splineToConstantHeading(new Vector2d(38, 0), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(38, 38), Math.toRadians(0))
                 .build();
-        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))),30,3)
-                .splineToConstantHeading(new Vector2d(38,0))
-                .splineToConstantheading(new Vector2d(38,-12))
+        right = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))), 30, 3)
+                .splineToConstantHeading(new Vector2d(38, 0), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(38, -12), Math.toRadians(0))
                 .build();
-        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))),30,3)
-                .splineToConstantHeading(new Vector2d(38,0))
+        center = drive.trajectoryBuilder(backward.end().plus(new Pose2d(0, 0, Math.toRadians(90))), 30, 3)
+                .splineToConstantHeading(new Vector2d(38, 0), Math.toRadians(0))
                 .build();
         robot.camera.requestStart();
         robot.grabber.close();
@@ -73,93 +73,27 @@ public class Right_Deliver1_5 extends BaseOpMode {
         drive.followTrajectory(forward);
         drive.followTrajectory(backward);
         drive.turn(Math.toRadians(180) - 1e-6);
-        for(int i=0; i<5; i++){
-            if(i == 0){
-                robot.arm.toSideStack();
-                drive.followTrajectory(coneStack);
-                //what are the units for arm movement on 86? The goal here is to move grabber in cone
-                drive.followTrajectory(forward);
-                robot.arm.move(robot.arm.getCurrentPosition() - 5);
-                robot.grabber.close();
-                robot.arm.move(robot.arm.getCurrentPosition() + 5);
-                drive.followTrajectory(backward);
-                drive.turn(Math.toRadians(180) + 1e-6);
-                drive.followTrajectory(coneStack);
-                robot.arm.toHigh();
-                drive.followTrajectory(forward);
-                robot.grabber.open();
-                drive.followTrajectory(backward);
-            } else if(i == 1){
-                robot.arm.move((robot.arm.SIDE_STACK)-(robot.arm.PICKUP));
-                drive.followTrajectory(coneStack);
-
-                drive.followTrajectory(forward);
-                robot.arm.move(robot.arm.getCurrentPosition() - 5);
-                robot.grabber.close();
-                robot.arm.move(robot.arm.getCurrentPosition() + 5);
-                drive.followTrajectory(backward);
-                drive.turn(Math.toRadians(180) + 1e-6);
-                drive.followTrajectory(coneStack);
-                robot.arm.toHigh();
-                drive.followTrajectory(forward);
-                robot.grabber.open();
-                drive.followTrajectory(backward);
-            } else if(i == 2){
-                robot.arm.move((robot.arm.SIDE_STACK)-((robot.arm.PICKUP)*2));
-                drive.followTrajectory(coneStack);
-
-                drive.followTrajectory(forward);
-                robot.arm.move(robot.arm.getCurrentPosition() - 5);
-                robot.grabber.close();
-                robot.arm.move(robot.arm.getCurrentPosition() + 5);
-                drive.followTrajectory(backward);
-                drive.turn(Math.toRadians(180) + 1e-6);
-                drive.followTrajectory(coneStack);
-                robot.arm.toHigh();
-                drive.followTrajectory(forward);
-                robot.grabber.open();
-                drive.followTrajectory(backward);
-            } else if(i == 3){
-                robot.arm.move((robot.arm.SIDE_STACK)-((robot.arm.PICKUP)*3));
-                drive.followTrajectory(coneStack);
-
-                drive.followTrajectory(forward);
-                robot.arm.move(robot.arm.getCurrentPosition() - 5);
-                robot.grabber.close();
-                robot.arm.move(robot.arm.getCurrentPosition() + 5);
-                drive.followTrajectory(backward);
-                drive.turn(Math.toRadians(180) + 1e-6);
-                drive.followTrajectory(coneStack);
-                robot.arm.toHigh();
-                drive.followTrajectory(forward);
-                robot.grabber.open();
-                drive.followTrajectory(backward);
-            } else {
-                robot.arm.move(robot.arm.PICKUP);
-                drive.followTrajectory(coneStack);
-
-                drive.followTrajectory(forward);
-                robot.arm.move(robot.arm.getCurrentPosition() - 5);
-                robot.grabber.close();
-                robot.arm.move(robot.arm.getCurrentPosition() + 5);
-                drive.followTrajectory(backward);
-                drive.turn(Math.toRadians(180) + 1e-6);
-                drive.followTrajectory(coneStack);
-                robot.arm.toHigh();
-                drive.followTrajectory(forward);
-                robot.grabber.open();
-                drive.followTrajectory(backward);
-            }
-
-            if (parkingPosition == Camera.ParkingPosition.LEFT) {
-                drive.followTrajectory(left);
-            } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
-                drive.followTrajectory(right);
-            } else {
-                drive.followTrajectory(center);
-            }
+        for (int i = 5; i > 0; i--) {
+            robot.arm.toSideStack();
+            drive.followTrajectory(coneStack);
+            drive.followTrajectory(forward);
+            robot.arm.move((int) (0.289 * i)); // go down height of i cones
+            robot.grabber.close();
+            robot.arm.toSideStack();
+            drive.followTrajectory(backward);
+            drive.turn(Math.toRadians(180) + 1e-6);
+            drive.followTrajectory(coneStack);
+            robot.arm.toHigh();
+            drive.followTrajectory(forward);
+            robot.grabber.open();
+            drive.followTrajectory(backward);
         }
-
-    };
-
+        if (parkingPosition == Camera.ParkingPosition.LEFT) {
+            drive.followTrajectory(left);
+        } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
+            drive.followTrajectory(right);
+        } else {
+            drive.followTrajectory(center);
+        }
+    }
 }

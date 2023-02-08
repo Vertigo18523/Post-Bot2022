@@ -40,22 +40,22 @@ public class Right_Deliver1_5 extends BaseOpMode {
         driveForward = drive.trajectoryBuilder(startPose)
                 .lineTo(new Vector2d(52, 0))
                 .build();
-        toPole1 = drive.trajectoryBuilder(driveForward.end())
-                .strafeLeft(12)
+        toPole1 = drive.trajectoryBuilder(driveForward.end(),40, 10)
+                .strafeLeft(14)
                 .build();
-        toPole2 = drive.trajectoryBuilder(toPole1.end())
+        toPole2 = drive.trajectoryBuilder(toPole1.end(), 40, 10)
                 .forward(7)
                 .build();
-        poleToCenter1 = drive.trajectoryBuilder(toPole2.end())
+        poleToCenter1 = drive.trajectoryBuilder(toPole2.end(), 40, 10)
                 .back(7)
                 .build();
-        poleToCenter2 = drive.trajectoryBuilder(poleToCenter1.end())
-                .strafeRight(12)
+        poleToCenter2 = drive.trajectoryBuilder(poleToCenter1.end(), 40, 10)
+                .strafeRight(14)
                 .build();
-        toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+        toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-85))), 40, 10)
                 .forward(28)
                 .build();
-        stackToCenter = drive.trajectoryBuilder(toStack.end())
+        stackToCenter = drive.trajectoryBuilder(toStack.end(), 40, 10)
                 .back(28)
                 .build();
         right = drive.trajectoryBuilder(driveForward.end())
@@ -82,13 +82,13 @@ public class Right_Deliver1_5 extends BaseOpMode {
             drive.followTrajectory(poleToCenter1);
             robot.arm.toSideStack();
             drive.followTrajectory(poleToCenter2);
-            drive.turn(Math.toRadians(-90));
+            drive.turn(Math.toRadians(-85));
             drive.followTrajectory(toStack);
             robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
             robot.grabber.close();
             robot.arm.toSideStack();
             drive.followTrajectory(stackToCenter);
-            drive.turn(Math.toRadians(90));
+            drive.turn(Math.toRadians(85));
         }
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
             drive.followTrajectory(left);

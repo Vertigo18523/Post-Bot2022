@@ -77,7 +77,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
             robot.arm.toSideStack();
             drive.followTrajectory(coneStack);
             drive.followTrajectory(forward);
-            robot.arm.move((int) (0.289 * i)); // go down height of i cones
+            robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
             robot.grabber.close();
             robot.arm.toSideStack();
             drive.followTrajectory(backward);

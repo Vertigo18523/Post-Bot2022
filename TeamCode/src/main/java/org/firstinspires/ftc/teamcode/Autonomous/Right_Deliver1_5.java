@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.drive.RRMecanum;
 public class Right_Deliver1_5 extends BaseOpMode {
     public PostBot robot;
     public RRMecanum drive;
-    public Trajectory driveForward, toPole1, toPole2, poleToCenter1, poleToCenter2, toStack, stackToCenter, left, right;
+    public Trajectory driveForward, toPole, toStack, stackToPole, left, right;
 
     Camera.ParkingPosition parkingPosition;
 
@@ -38,25 +38,18 @@ public class Right_Deliver1_5 extends BaseOpMode {
         Pose2d startPose = new Pose2d();
         drive.setPoseEstimate(startPose);
         driveForward = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(52, 0))
+                .lineToSplineHeading(new Pose2d(52, 0, Math.toRadians(-90)))
                 .build();
-        toPole1 = drive.trajectoryBuilder(driveForward.end(),40, 10)
-                .strafeLeft(14)
-                .build();
-        toPole2 = drive.trajectoryBuilder(toPole1.end(), 40, 10)
-                .forward(7)
-                .build();
-        poleToCenter1 = drive.trajectoryBuilder(toPole2.end(), 40, 10)
-                .back(7)
-                .build();
-        poleToCenter2 = drive.trajectoryBuilder(poleToCenter1.end(), 40, 10)
-                .strafeRight(14)
+        toPole = drive.trajectoryBuilder(driveForward.end(),40, 10)
+                .splineToConstantHeading(new Pose2d(56,12),0)
                 .build();
         toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-85))), 40, 10)
-                .forward(28)
+                .splineToConstantHeading(new Vector2d(52, 0), 0)
+                .splineToConstantHeading(new Vector2d(80,0),0)
                 .build();
-        stackToCenter = drive.trajectoryBuilder(toStack.end(), 40, 10)
-                .back(28)
+        stackToPole = drive.trajectoryBuilder(toStack.end(), 40, 10)
+                .splineToConstantHeading(new Vector2d(52, 0), 0)
+                .splineToConstantHeading(new Pose2d(56,12),0)
                 .build();
         right = drive.trajectoryBuilder(driveForward.end())
                 .strafeRight(24)
@@ -74,21 +67,18 @@ public class Right_Deliver1_5 extends BaseOpMode {
         robot.grabber.close();
         robot.arm.toSideStack();
         drive.followTrajectory(driveForward);
+        robot.arm.toHigh();
+        drive.followTrajectory(toPole);
+        robot.grabber.open();
         for (int i = 5; i > 0; i--) {
-            drive.followTrajectory(toPole1);
-            robot.arm.toHigh();
-            drive.followTrajectory(toPole2);
-            robot.grabber.open();
-            drive.followTrajectory(poleToCenter1);
-            robot.arm.toSideStack();
-            drive.followTrajectory(poleToCenter2);
-            drive.turn(Math.toRadians(-85));
             drive.followTrajectory(toStack);
+            robot.arm.toSideStack();
             robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
             robot.grabber.close();
             robot.arm.toSideStack();
-            drive.followTrajectory(stackToCenter);
-            drive.turn(Math.toRadians(85));
+            drive.followTrajectory(stackToPole);
+            robot.arm.toHigh();
+            robot.grabber.open();
         }
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
             drive.followTrajectory(left);

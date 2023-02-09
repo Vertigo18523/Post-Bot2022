@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Base.Component;
@@ -25,8 +28,13 @@ public class Arm implements Component {
     public int UPPER_BOUND;
 
     public double MotorPower;
-    public int TotalTicks, StartingPosition;
+    public int targetPosition, StartingPosition;
     public boolean isTeleOp;
+    public double error, prevError = 0;
+    public double kP = 0.01, kG = 0.2;
+    ElapsedTime timer = new ElapsedTime();
+    Telemetry telemetry1;
+
 
     public Arm(
             String rightArmName,
@@ -62,16 +70,15 @@ public class Arm implements Component {
         this.UPPER_BOUND = (int) (upperBound * PULSES_PER_REVOLUTION);
         this.telemetry = telemetry;
         this.isTeleOp = isTeleOp;
+        this.telemetry1 = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     @Override
     public void init() {
         leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         move(isTeleOp ? ZERO_POSITION : LOWER_BOUND);
     }
 
@@ -81,19 +88,13 @@ public class Arm implements Component {
 
     @Override
     public void update() {
-        telemetry.addData("Position", getCurrentPosition());
-        telemetry.addData("Target", getTargetPosition());
-        if (isTeleOp) {
-            if (isBusy()) {
-                setPower(MotorPower);
-//                setPower(((-4.0 * MotorPower) / Math.pow(TotalTicks, 2.0)) * Math.pow(TotalTicks / 2.0 - getCurrentPosition(), 2.0) + MotorPower);
-            } else {
-                setPower(0);
-                move(getTargetPosition());
-            }
-        } else {
-            if (getCurrentPosition() != getTargetPosition()) move(getTargetPosition());
-        }
+        error = targetPosition - getCurrentPosition();
+        setPower((kP * error) + (targetPosition > 0 ? kG : 0.0) * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? /*0.5*/ 1 : 1) : 1));
+        prevError = error;
+
+        telemetry1.addData("Position", getCurrentPosition());
+        telemetry1.addData("Target", getTargetPosition());
+        telemetry1.update();
     }
 
     @Override
@@ -130,25 +131,11 @@ public class Arm implements Component {
     }
 
     public void move(int position) {
-        move(position, 1);
-    }
-
-    public void move(int position, double motorPower) {
-        leftArm.setTargetPosition(position);
-        rightArm.setTargetPosition(position);
-        leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        MotorPower = motorPower;
-        TotalTicks = position;
-        StartingPosition = getCurrentPosition();
-        if (getCurrentPosition() + 10 > position && getCurrentPosition() > SIDE_STACK) { // if going down
-            MotorPower *= 0.5;
-        }
+        targetPosition = position;
         if (!isTeleOp) {
             while (isBusy()) {
-                setPower(MotorPower);
+                update();
             }
-            //setPower(0);
         }
     }
 
@@ -158,11 +145,11 @@ public class Arm implements Component {
     }
 
     public boolean isBusy() {
-        return leftArm.isBusy() || rightArm.isBusy();
+        return Math.abs(error) > 10;
     }
 
     public int getCurrentPosition() {
-        return (leftArm.getCurrentPosition() + rightArm.getCurrentPosition()) / 2;
+        return Math.min(leftArm.getCurrentPosition(), rightArm.getCurrentPosition());
     }
 
     public int getTargetPosition() {

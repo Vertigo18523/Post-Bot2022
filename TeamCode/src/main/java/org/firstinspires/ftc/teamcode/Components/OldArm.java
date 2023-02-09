@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.Components;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Base.Component;
 
-@Config
-public class NewArm implements Component {
+public class OldArm implements Component {
     private final DcMotor rightArm;
     private final DcMotor leftArm;
 
@@ -32,13 +27,8 @@ public class NewArm implements Component {
     public double MotorPower;
     public int TotalTicks, StartingPosition;
     public boolean isTeleOp;
-    public double proportional, integral = 0, derivative, pid, prevError = 0;
-    public static double kP, kI, kD;
-    ElapsedTime timer = new ElapsedTime();
-    Telemetry telemetry1;
 
-
-    public NewArm(
+    public OldArm(
             String rightArmName,
             String leftArmName,
             HardwareMap hardwareMap,
@@ -72,17 +62,14 @@ public class NewArm implements Component {
         this.UPPER_BOUND = (int) (upperBound * PULSES_PER_REVOLUTION);
         this.telemetry = telemetry;
         this.isTeleOp = isTeleOp;
-        this.telemetry1 = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     @Override
     public void init() {
         leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         move(isTeleOp ? ZERO_POSITION : LOWER_BOUND);
@@ -94,27 +81,19 @@ public class NewArm implements Component {
 
     @Override
     public void update() {
-        telemetry1.addData("Position", getCurrentPosition());
-        telemetry1.addData("Target", getTargetPosition());
+        telemetry.addData("Position", getCurrentPosition());
+        telemetry.addData("Target", getTargetPosition());
         if (isTeleOp) {
             if (isBusy()) {
-//                setPower(MotorPower);
-                proportional = TotalTicks - getCurrentPosition();
-                integral += proportional * timer.seconds();
-                derivative = (proportional - prevError) / timer.seconds();
-                pid = (kP * proportional) + (kI * integral) + (kD * derivative);
-                setPower(Math.min(pid, MotorPower));
-                prevError = proportional;
-                timer.reset();
+                setPower(MotorPower);
 //                setPower(((-4.0 * MotorPower) / Math.pow(TotalTicks, 2.0)) * Math.pow(TotalTicks / 2.0 - getCurrentPosition(), 2.0) + MotorPower);
             } else {
-//                setPower(0);
+                setPower(0);
                 move(getTargetPosition());
             }
         } else {
             if (getCurrentPosition() != getTargetPosition()) move(getTargetPosition());
         }
-        telemetry1.update();
     }
 
     @Override
@@ -157,8 +136,8 @@ public class NewArm implements Component {
     public void move(int position, double motorPower) {
         leftArm.setTargetPosition(position);
         rightArm.setTargetPosition(position);
-//        leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         MotorPower = motorPower;
         TotalTicks = position;
         StartingPosition = getCurrentPosition();
@@ -169,7 +148,7 @@ public class NewArm implements Component {
             while (isBusy()) {
                 setPower(MotorPower);
             }
-//            setPower(0);
+            //setPower(0);
         }
     }
 
@@ -183,7 +162,7 @@ public class NewArm implements Component {
     }
 
     public int getCurrentPosition() {
-        return Math.min(leftArm.getCurrentPosition(), rightArm.getCurrentPosition());
+        return (leftArm.getCurrentPosition() + rightArm.getCurrentPosition()) / 2;
     }
 
     public int getTargetPosition() {

@@ -89,7 +89,7 @@ public class Arm implements Component {
     @Override
     public void update() {
         error = targetPosition - getCurrentPosition();
-        setPower((kP * error) + (targetPosition > 0 ? kG : 0.0) * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? /*0.5*/ 1 : 1) : 1));
+        setPower((kP * error) + (targetPosition > 0 ? kG : 0.0) * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? 0.3 : 1) : 1));
         prevError = error;
 
         telemetry1.addData("Position", getCurrentPosition());

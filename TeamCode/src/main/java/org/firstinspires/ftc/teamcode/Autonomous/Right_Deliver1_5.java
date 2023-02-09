@@ -19,7 +19,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
 
     Camera.ParkingPosition parkingPosition;
 
-    public int state = 100;
+    public int i;
 
     @Override
     protected Robot setRobot() {
@@ -39,17 +39,29 @@ public class Right_Deliver1_5 extends BaseOpMode {
         drive.setPoseEstimate(startPose);
         driveForward = drive.trajectoryBuilder(startPose)
                 .lineToSplineHeading(new Pose2d(52, 0, Math.toRadians(-90)))
+                .addDisplacementMarker(() -> robot.arm.toHigh())
                 .build();
         toPole = drive.trajectoryBuilder(driveForward.end(),40, 10)
                 .splineToConstantHeading(new Vector2d(56,12),0)
+                .addDisplacementMarker(() -> robot.grabber.open())
                 .build();
         toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-85))), 40, 10)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
                 .splineToConstantHeading(new Vector2d(80,0),0)
+                .addDisplacementMarker(() -> {
+                    robot.arm.toSideStack();
+                    robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
+                    robot.grabber.close();
+                    robot.arm.toSideStack();
+                })
                 .build();
         stackToPole = drive.trajectoryBuilder(toStack.end(), 40, 10)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
                 .splineToConstantHeading(new Vector2d(56,12),0)
+                .addDisplacementMarker(() -> {
+                    robot.arm.toHigh();
+                    robot.grabber.open();
+                })
                 .build();
         right = drive.trajectoryBuilder(driveForward.end())
                 .strafeRight(24)
@@ -67,18 +79,10 @@ public class Right_Deliver1_5 extends BaseOpMode {
         robot.grabber.close();
         robot.arm.toSideStack();
         drive.followTrajectory(driveForward);
-        robot.arm.toHigh();
         drive.followTrajectory(toPole);
-        robot.grabber.open();
-        for (int i = 5; i > 0; i--) {
+        for (i = 5; i > 0; i--) {
             drive.followTrajectory(toStack);
-            robot.arm.toSideStack();
-            robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
-            robot.grabber.close();
-            robot.arm.toSideStack();
             drive.followTrajectory(stackToPole);
-            robot.arm.toHigh();
-            robot.grabber.open();
         }
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
             drive.followTrajectory(left);

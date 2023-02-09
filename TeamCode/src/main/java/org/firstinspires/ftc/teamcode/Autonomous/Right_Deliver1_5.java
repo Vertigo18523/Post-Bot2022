@@ -41,7 +41,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 .lineToSplineHeading(new Pose2d(52, 0, Math.toRadians(-90)))
                 .build();
         toPole = drive.trajectoryBuilder(driveForward.end(),40, 10)
-                .splineToConstantHeading(new Pose2d(56,12),0)
+                .splineToConstantHeading(new Vector2d(56,12),0)
                 .build();
         toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-85))), 40, 10)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
@@ -49,7 +49,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 .build();
         stackToPole = drive.trajectoryBuilder(toStack.end(), 40, 10)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
-                .splineToConstantHeading(new Pose2d(56,12),0)
+                .splineToConstantHeading(new Vector2d(56,12),0)
                 .build();
         right = drive.trajectoryBuilder(driveForward.end())
                 .strafeRight(24)

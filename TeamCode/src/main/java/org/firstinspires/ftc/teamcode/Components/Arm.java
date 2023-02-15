@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Components;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,12 +11,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Base.Component;
 
+@Config
 public class Arm implements Component {
     private final DcMotor rightArm;
     private final DcMotor leftArm;
-
-    private final Telemetry telemetry;
-
     public double PULSES_PER_REVOLUTION;
     public int LOWER_BOUND;
     public int ZERO_POSITION;
@@ -26,15 +25,11 @@ public class Arm implements Component {
     public int MEDIUM_JUNCTION;
     public int HIGH_JUNCTION;
     public int UPPER_BOUND;
-
-    public double MotorPower;
-    public int targetPosition, StartingPosition;
+    public static int targetPosition = 0;
     public boolean isTeleOp;
-    public double error, prevError = 0;
-    public double kP = 0.01, kG = 0.2;
-    ElapsedTime timer = new ElapsedTime();
-    Telemetry telemetry1;
-
+    public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d;
+    public static double kP = 0.01, kD, kG = 0.2;
+    Telemetry telemetry;
 
     public Arm(
             String rightArmName,
@@ -68,9 +63,8 @@ public class Arm implements Component {
         this.MEDIUM_JUNCTION = (int) (mediumJunction * PULSES_PER_REVOLUTION);
         this.HIGH_JUNCTION = (int) (highJunction * PULSES_PER_REVOLUTION);
         this.UPPER_BOUND = (int) (upperBound * PULSES_PER_REVOLUTION);
-        this.telemetry = telemetry;
         this.isTeleOp = isTeleOp;
-        this.telemetry1 = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     @Override
@@ -89,12 +83,17 @@ public class Arm implements Component {
     @Override
     public void update() {
         error = targetPosition - getCurrentPosition();
-        setPower((kP * error) + (targetPosition > 0 ? kG : 0.0) * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? 0.3 : 1) : 1));
+        time = System.nanoTime() * 1e-9d;
+        setPower(((kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (targetPosition > 0 ? kG : 0.0)) * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? 0.3 : 1) : 1));
         prevError = error;
+        prevTime = time;
 
-        telemetry1.addData("Position", getCurrentPosition());
-        telemetry1.addData("Target", getTargetPosition());
-        telemetry1.update();
+        // https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
+
+        telemetry.addData("Position", getCurrentPosition());
+        telemetry.addData("Target", getTargetPosition());
+        telemetry.addData("Error", error);
+        telemetry.update();
     }
 
     @Override

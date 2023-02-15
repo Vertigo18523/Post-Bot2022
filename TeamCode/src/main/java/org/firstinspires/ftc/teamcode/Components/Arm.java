@@ -27,8 +27,8 @@ public class Arm implements Component {
     public int UPPER_BOUND;
     public static int targetPosition = 0;
     public boolean isTeleOp;
-    public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d;
-    public static double kP = 0.01, kD, kG = 0.2;
+    public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d, power;
+    public static double kP = 0, kD = 0, kG = 0.45;
     Telemetry telemetry;
 
     public Arm(
@@ -84,15 +84,17 @@ public class Arm implements Component {
     public void update() {
         error = targetPosition - getCurrentPosition();
         time = System.nanoTime() * 1e-9d;
-        setPower(((kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (targetPosition > 0 ? kG : 0.0)) * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? 0.3 : 1) : 1));
+        power = ((kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (targetPosition > 0 ? kG : 0.0));// * ((error < 0 && getCurrentPosition() > SIDE_STACK) ? (isTeleOp ? 0.3 : 1) : 1));
+        setPower(power);
         prevError = error;
         prevTime = time;
 
         // https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
 
         telemetry.addData("Position", getCurrentPosition());
-        telemetry.addData("Target", getTargetPosition());
+        telemetry.addData("Target", targetPosition);
         telemetry.addData("Error", error);
+        telemetry.addData("Power", power);
         telemetry.update();
     }
 
@@ -139,6 +141,7 @@ public class Arm implements Component {
     }
 
     public void setPower(double motorPower) {
+        if (motorPower > 1) motorPower = 1;
         rightArm.setPower(motorPower);
         leftArm.setPower(motorPower);
     }
@@ -149,9 +152,5 @@ public class Arm implements Component {
 
     public int getCurrentPosition() {
         return Math.min(leftArm.getCurrentPosition(), rightArm.getCurrentPosition());
-    }
-
-    public int getTargetPosition() {
-        return leftArm.getTargetPosition();
     }
 }

@@ -15,7 +15,9 @@ import org.firstinspires.ftc.teamcode.Base.Component;
 public class Arm implements Component {
     private final DcMotor rightArm;
     private final DcMotor leftArm;
+    private final DcMotor rotation;
     public double PULSES_PER_REVOLUTION;
+    public double PULSES_PER_REVOLUTION_ROTATION;
     public int LOWER_BOUND;
     public int ZERO_POSITION;
     public int GROUND_JUNCTION;
@@ -25,6 +27,8 @@ public class Arm implements Component {
     public int MEDIUM_JUNCTION;
     public int HIGH_JUNCTION;
     public int UPPER_BOUND;
+    public int FORWARD;
+    public int BACKWARD;
     public static int targetPosition = 0;
     public boolean isTeleOp;
     public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d, power;
@@ -34,6 +38,7 @@ public class Arm implements Component {
     public Arm(
             String rightArmName,
             String leftArmName,
+            String rotationName,
             HardwareMap hardwareMap,
             Telemetry telemetry,
             boolean isTeleOp,
@@ -45,15 +50,19 @@ public class Arm implements Component {
             double lowJunction,
             double mediumJunction,
             double highJunction,
-            double upperBound
+            double upperBound,
+            double forward,
+            double backward
     ) {
         rightArm = hardwareMap.get(DcMotor.class, rightArmName);
         leftArm = hardwareMap.get(DcMotor.class, leftArmName);
+        rotation = hardwareMap.get(DcMotor.class, rotationName);
 
         rightArm.setDirection(DcMotorSimple.Direction.FORWARD);
         leftArm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.PULSES_PER_REVOLUTION = 145.1; // gobilda 5202 1150 rpm
+        this.PULSES_PER_REVOLUTION_ROTATION = 145.1; // gobilda 5202 1150 rpm
         this.LOWER_BOUND = (int) (lowerBound * PULSES_PER_REVOLUTION);
         this.ZERO_POSITION = (int) (zeroPosition * PULSES_PER_REVOLUTION);
         this.GROUND_JUNCTION = (int) (groundJunction * PULSES_PER_REVOLUTION);
@@ -63,6 +72,8 @@ public class Arm implements Component {
         this.MEDIUM_JUNCTION = (int) (mediumJunction * PULSES_PER_REVOLUTION);
         this.HIGH_JUNCTION = (int) (highJunction * PULSES_PER_REVOLUTION);
         this.UPPER_BOUND = (int) (upperBound * PULSES_PER_REVOLUTION);
+        this.FORWARD = (int) (forward * PULSES_PER_REVOLUTION_ROTATION);
+        this.BACKWARD = (int) (backward * PULSES_PER_REVOLUTION_ROTATION);
         this.isTeleOp = isTeleOp;
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
@@ -71,8 +82,11 @@ public class Arm implements Component {
     public void init() {
         leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         move(isTeleOp ? ZERO_POSITION : LOWER_BOUND);
     }
 
@@ -90,6 +104,9 @@ public class Arm implements Component {
         prevTime = time;
 
         // https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
+
+        rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotation.setPower(0.5);
 
         telemetry.addData("Position", getCurrentPosition());
         telemetry.addData("Target", targetPosition);
@@ -131,6 +148,14 @@ public class Arm implements Component {
         move(HIGH_JUNCTION);
     }
 
+    public void toForward() {
+        moveRotation(FORWARD);
+    }
+
+    public void toBackward() {
+        moveRotation(BACKWARD);
+    }
+
     public void move(int position) {
         targetPosition = position;
         if (!isTeleOp) {
@@ -138,6 +163,10 @@ public class Arm implements Component {
                 update();
             }
         }
+    }
+
+    public void moveRotation(int position) {
+        rotation.setTargetPosition(position);
     }
 
     public void setPower(double motorPower) {

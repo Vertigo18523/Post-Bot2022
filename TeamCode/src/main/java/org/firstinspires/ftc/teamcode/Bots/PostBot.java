@@ -42,6 +42,8 @@ public class PostBot extends Robot {
                 7.672,
                 7.802
         );
+        Arm.kG = 0.2;
+        Arm.kP = 0.02;
         this.grabber = new Grabber(opMode, "grabber", hardwareMap, telemetry);
         if (isTeleOp) {
             this.mecanum = new Mecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", telemetry);

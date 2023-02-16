@@ -29,6 +29,7 @@ public class PostBot extends Robot {
         this.arm = new Arm(
                 "arm",
                 "leftArm",
+                "rotation",
                 hardwareMap,
                 telemetry,
                 isTeleOp,

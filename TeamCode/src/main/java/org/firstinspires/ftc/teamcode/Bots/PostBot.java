@@ -47,7 +47,14 @@ public class PostBot extends Robot {
         );
         Arm.kG = 0.2;
         Arm.kP = 0.02;
-        this.grabber = new Grabber(opMode, "grabber", hardwareMap, telemetry);
+        this.grabber = new Grabber(
+                opMode,
+                "grabber",
+                hardwareMap,
+                telemetry,
+                1,
+                0.7
+        );
         if (isTeleOp) {
             this.mecanum = new Mecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", telemetry);
             this.mecanum.fl.setDirection(DcMotorSimple.Direction.REVERSE);

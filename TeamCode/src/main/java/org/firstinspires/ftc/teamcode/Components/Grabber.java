@@ -18,10 +18,10 @@ public class Grabber implements Component {
 
     public boolean isGrabbing;
 
-    public Grabber(LinearOpMode opMode, String deviceName, HardwareMap hardwareMap, Telemetry telemetry) {
+    public Grabber(LinearOpMode opMode, String deviceName, HardwareMap hardwareMap, Telemetry telemetry, double open, double closed) {
         grabber = hardwareMap.get(Servo.class, deviceName);
-        this.OPEN = 1;
-        this.CLOSED = 0.7;
+        this.OPEN = open;
+        this.CLOSED = closed;
         this.telemetry = telemetry;
         this.opMode = opMode;
     }

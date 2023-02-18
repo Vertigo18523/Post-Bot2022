@@ -27,7 +27,7 @@ public class rotationCalibration extends LinearOpMode {
         while (opModeIsActive()) {
             rotation.setTargetPosition(targetPosition);
             rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rotation.setPower(0.5);
+            rotation.setPower(1);
             telemetry.addData("Target", targetPosition);
             telemetry.addData("Position", rotation.getCurrentPosition());
             telemetry.update();

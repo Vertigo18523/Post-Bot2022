@@ -32,7 +32,7 @@ public class Arm implements Component {
     public static int targetPosition = 0;
     public boolean isTeleOp;
     public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d, power;
-    public static double kP, kD, kG;
+    public static double kP = 0.015, kD = 0, kG = 0.2;
     Telemetry telemetry;
 
     public Arm(

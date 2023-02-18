@@ -46,8 +46,6 @@ public class PostBot extends Robot {
                 0,
                 0
         );
-        Arm.kG = 0.2;
-        Arm.kP = 0.02;
         this.grabber = new Grabber(
                 opMode,
                 "grabber",

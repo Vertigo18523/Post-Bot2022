@@ -43,6 +43,7 @@ public class PostBot extends Robot {
                 7.672,
                 7.802,
                 0,
+                0,
                 0
         );
         Arm.kG = 0.2;

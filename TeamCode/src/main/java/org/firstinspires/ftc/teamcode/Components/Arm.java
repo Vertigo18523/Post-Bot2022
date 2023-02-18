@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Base.Component;
@@ -27,6 +26,7 @@ public class Arm implements Component {
     public int MEDIUM_JUNCTION;
     public int HIGH_JUNCTION;
     public int UPPER_BOUND;
+    public int INIT;
     public int FORWARD;
     public int BACKWARD;
     public static int targetPosition = 0;
@@ -51,6 +51,7 @@ public class Arm implements Component {
             double mediumJunction,
             double highJunction,
             double upperBound,
+            double init,
             double forward,
             double backward
     ) {
@@ -72,6 +73,7 @@ public class Arm implements Component {
         this.MEDIUM_JUNCTION = (int) (mediumJunction * PULSES_PER_REVOLUTION);
         this.HIGH_JUNCTION = (int) (highJunction * PULSES_PER_REVOLUTION);
         this.UPPER_BOUND = (int) (upperBound * PULSES_PER_REVOLUTION);
+        this.INIT = (int) (init * PULSES_PER_REVOLUTION);
         this.FORWARD = (int) (forward * PULSES_PER_REVOLUTION_ROTATION);
         this.BACKWARD = (int) (backward * PULSES_PER_REVOLUTION_ROTATION);
         this.isTeleOp = isTeleOp;
@@ -104,9 +106,12 @@ public class Arm implements Component {
         prevTime = time;
 
         // https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
-
-        rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rotation.setPower(0.5);
+        if (rotation.getTargetPosition() > FORWARD) {
+            rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rotation.setPower(1);
+        } else {
+            rotation.setPower(0);
+        }
 
         telemetry.addData("Position", getCurrentPosition());
         telemetry.addData("Target", targetPosition);
@@ -147,6 +152,8 @@ public class Arm implements Component {
     public void toHigh() {
         move(HIGH_JUNCTION);
     }
+
+    public void toInit() {moveRotation(INIT);}
 
     public void toForward() {
         moveRotation(FORWARD);

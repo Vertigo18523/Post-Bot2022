@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.drive.RRMecanum;
 public class Right_Deliver1_5 extends BaseOpMode {
     public PostBot robot;
     public RRMecanum drive;
-    public Trajectory driveForward, toPole, toStack, stackToPole, left, right;
+    public Trajectory driveForward, toPole, toStack, stackToPole, left, center, right;
 
     Camera.ParkingPosition parkingPosition;
 
@@ -42,12 +42,15 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 .addDisplacementMarker(() -> robot.arm.toHigh())
                 .build();
         toPole = drive.trajectoryBuilder(driveForward.end(),40, 10)
+                .splineToConstantHeading(new Vector2d(52,10),0)
                 .splineToConstantHeading(new Vector2d(56,12),0)
                 .addDisplacementMarker(() -> robot.grabber.open())
                 .build();
         toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-85))), 40, 10)
+                .splineToConstantHeading(new Vector2d(56,10),0)
+                .splineToConstantHeading(new Vector2d(52,10),0)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
-                .splineToConstantHeading(new Vector2d(80,0),0)
+                .splineToConstantHeading(new Vector2d(52,-28),0)
                 .addDisplacementMarker(() -> {
                     robot.arm.toSideStack();
                     robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
@@ -64,10 +67,15 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 })
                 .build();
         right = drive.trajectoryBuilder(driveForward.end())
-                .strafeRight(24)
+                .strafeRight(2)
+                .forward(48)
+                .build();
+        center =  drive.trajectoryBuilder(driveForward.end())
+                .strafeRight(2)
+                .forward(24)
                 .build();
         left = drive.trajectoryBuilder(driveForward.end())
-                .strafeLeft(24)
+                .strafeRight(2)
                 .build();
         robot.camera.requestStart();
         robot.grabber.close();
@@ -89,7 +97,7 @@ public class Right_Deliver1_5 extends BaseOpMode {
         } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
             drive.followTrajectory(right);
         } else {
-            // already in the center -> do nothing
+            drive.followTrajectory(center);
         }
     }
 }

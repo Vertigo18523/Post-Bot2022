@@ -123,7 +123,6 @@ public class MainOp extends BaseOpMode {
         }
 
         robot.mecanum.drive(x * speed, y * speed, rot * speed);
-        telemetry.addData("Raw", robot.arm.getTelemetry());
         telemetry.update();
     }
 }

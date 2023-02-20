@@ -89,16 +89,14 @@ public class Slides implements Component {
         setPower(power);
         prevError = error;
         prevTime = time;
-
-        telemetry.addData("Position", getCurrentPosition());
-        telemetry.addData("Target", targetPosition);
-        telemetry.addData("Error", error);
-        telemetry.addData("Power", power);
-        telemetry.update();
     }
 
     @Override
     public String getTelemetry() {
+        telemetry.addData("SlidePosition", getCurrentPosition());
+        telemetry.addData("SlideTarget", targetPosition);
+        telemetry.addData("SlideError", error);
+        telemetry.addData("SlidePower", power);
         return "Left: " + leftArm.getCurrentPosition() +
                 "\nRight: " + rightArm.getCurrentPosition();
     }

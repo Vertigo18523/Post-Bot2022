@@ -65,15 +65,14 @@ public class ArmRotation implements Component {
         prevError = error;
         prevTime = time;
 
-        telemetry.addData("Position", getCurrentPosition());
-        telemetry.addData("Target", targetPosition);
-        telemetry.addData("Error", error);
-        telemetry.addData("Power", power);
-        telemetry.update();
     }
 
     @Override
     public String getTelemetry() {
+        telemetry.addData("RotationPosition", getCurrentPosition());
+        telemetry.addData("RotationTarget", targetPosition);
+        telemetry.addData("RotationError", error);
+        telemetry.addData("RotationPower", power);
         return null;
     }
 

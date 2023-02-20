@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Base.BaseOpMode;
@@ -26,6 +28,7 @@ public class MainOp extends BaseOpMode {
     @Override
     public void onInit() throws InterruptedException {
         robot.grabber.open();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //        robot.camera.requestStart();
     }
 

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class rotationCalibration extends LinearOpMode {
     DcMotor rotation;
     public static int targetPosition = 0;
+    public static double power = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,7 +28,7 @@ public class rotationCalibration extends LinearOpMode {
         while (opModeIsActive()) {
             rotation.setTargetPosition(targetPosition);
             rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rotation.setPower(1);
+            rotation.setPower(power);
             telemetry.addData("Target", targetPosition);
             telemetry.addData("Position", rotation.getCurrentPosition());
             telemetry.update();

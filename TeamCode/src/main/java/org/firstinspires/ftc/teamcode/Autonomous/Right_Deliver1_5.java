@@ -42,40 +42,42 @@ public class Right_Deliver1_5 extends BaseOpMode {
                 .addDisplacementMarker(() -> robot.arm.toHigh())
                 .build();
         toPole = drive.trajectoryBuilder(driveForward.end(),40, 10)
-                .splineToConstantHeading(new Vector2d(52,10),0)
-                .splineToConstantHeading(new Vector2d(56,12),0)
+                .splineToConstantHeading(new Vector2d(50,24),0)
+                .splineToConstantHeading(new Vector2d(58,25),0)
                 .addDisplacementMarker(() -> robot.grabber.open())
                 .build();
-        toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(-85))), 40, 10)
-                .splineToConstantHeading(new Vector2d(56,10),0)
-                .splineToConstantHeading(new Vector2d(52,10),0)
+        toStack = drive.trajectoryBuilder(driveForward.end().plus(new Pose2d(0, 0, Math.toRadians(0))), 40, 10)
+                .splineToConstantHeading(new Vector2d(58,24),0)
+                .splineToConstantHeading(new Vector2d(52,24),0)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
                 .splineToConstantHeading(new Vector2d(52,-28),0)
                 .addDisplacementMarker(() -> {
                     robot.arm.toSideStack();
                     robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
+                    //rotation arm stuff is going to go here
                     robot.grabber.close();
                     robot.arm.toSideStack();
                 })
                 .build();
-        stackToPole = drive.trajectoryBuilder(toStack.end(), 40, 10)
+        stackToPole = drive.trajectoryBuilder(toStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), 40, 10)
                 .splineToConstantHeading(new Vector2d(52, 0), 0)
-                .splineToConstantHeading(new Vector2d(56,12),0)
+                .splineToConstantHeading(new Vector2d(58,24),0)
                 .addDisplacementMarker(() -> {
                     robot.arm.toHigh();
+                    //more rotation arm stuff here
                     robot.grabber.open();
                 })
                 .build();
-        right = drive.trajectoryBuilder(driveForward.end())
-                .strafeRight(2)
-                .forward(48)
+        right = drive.trajectoryBuilder(stackToPole.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+                .splineToConstantHeading(new Vector2d(54, 24), 0)
+                .splineToConstantHeading(new Vector2d(54, -36), 0)
                 .build();
-        center =  drive.trajectoryBuilder(driveForward.end())
-                .strafeRight(2)
-                .forward(24)
+        center =  drive.trajectoryBuilder(stackToPole.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+                .splineToConstantHeading(new Vector2d(54, 24), 0)
+                .splineToConstantHeading(new Vector2d(54, -12), 0)
                 .build();
-        left = drive.trajectoryBuilder(driveForward.end())
-                .strafeRight(2)
+        left = drive.trajectoryBuilder(stackToPole.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+                .splineToConstantHeading(new Vector2d(54, 24), 0)
                 .build();
         robot.camera.requestStart();
         robot.grabber.close();

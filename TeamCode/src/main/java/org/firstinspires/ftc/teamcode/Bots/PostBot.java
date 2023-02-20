@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Base.Robot;
-import org.firstinspires.ftc.teamcode.Components.Arm;
+import org.firstinspires.ftc.teamcode.Components.ArmRotation;
+import org.firstinspires.ftc.teamcode.Components.Slides;
 import org.firstinspires.ftc.teamcode.Components.Camera;
 import org.firstinspires.ftc.teamcode.Components.Grabber;
 import org.firstinspires.ftc.teamcode.Components.Mecanum;
@@ -16,7 +17,8 @@ import org.firstinspires.ftc.teamcode.Components.PIDMecanum;
 public class PostBot extends Robot {
     public boolean isTeleOp;
     public Camera camera;
-    public Arm arm;
+    public ArmRotation rotation;
+    public Slides arm;
     public Grabber grabber;
     public Mecanum mecanum;
     public PIDMecanum pidMecanum;
@@ -26,13 +28,22 @@ public class PostBot extends Robot {
     public void mapHardware(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opMode, boolean isTeleOp) {
         this.isTeleOp = isTeleOp;
         this.camera = new Camera(opMode, "Webcam 1", hardwareMap, telemetry);
-        this.arm = new Arm(
-                "arm",
-                "leftArm",
+        this.rotation = new ArmRotation(
                 "rotation",
                 hardwareMap,
                 telemetry,
                 isTeleOp,
+                0,
+                -590,
+                -60
+        );
+        this.arm = new Slides(
+                "arm",
+                "leftArm",
+                hardwareMap,
+                telemetry,
+                isTeleOp,
+                this.rotation,
                 -0.026,
                 0.048,
                 0.388,
@@ -41,10 +52,7 @@ public class PostBot extends Robot {
                 3.277,
                 5.462,
                 7.672,
-                7.802,
-                0,
-                -590,
-                -60
+                7.802
         );
         this.grabber = new Grabber(
                 opMode,
@@ -75,6 +83,6 @@ public class PostBot extends Robot {
             addComponents(pidMecanum);
        }
 
-        addComponents(camera, grabber, arm);
+        addComponents(camera, grabber, rotation, arm);
     }
 }

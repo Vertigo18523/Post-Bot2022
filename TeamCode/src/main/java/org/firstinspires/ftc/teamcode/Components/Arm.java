@@ -105,7 +105,6 @@ public class Arm implements Component {
         prevError = error;
         prevTime = time;
 
-        // https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
         if (rotation.getTargetPosition() > FORWARD) {
             rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rotation.setPower(1);
@@ -122,7 +121,8 @@ public class Arm implements Component {
 
     @Override
     public String getTelemetry() {
-        return "Left: " + leftArm.getCurrentPosition() + " Right: " + rightArm.getCurrentPosition();
+        return "Left: " + leftArm.getCurrentPosition() +
+                "\nRight: " + rightArm.getCurrentPosition();
     }
 
     public void toZero() {

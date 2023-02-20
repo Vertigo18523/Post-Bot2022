@@ -88,6 +88,16 @@ public class ArmRotation implements Component {
         move(BACKWARD);
     }
 
+    public void toggle() {
+        if (getCurrentPosition() + error == BACKWARD) {
+            toForward();
+        } else if (getCurrentPosition() + error == FORWARD) {
+            toBackward();
+        } else { // init position
+            toBackward();
+        }
+    }
+
     public void move(int position) {
         targetPosition = position;
         if (!isTeleOp) {

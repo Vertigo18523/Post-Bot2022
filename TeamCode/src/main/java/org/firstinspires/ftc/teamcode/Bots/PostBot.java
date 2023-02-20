@@ -43,8 +43,8 @@ public class PostBot extends Robot {
                 7.672,
                 7.802,
                 0,
-                0,
-                0
+                -590,
+                -60
         );
         this.grabber = new Grabber(
                 opMode,

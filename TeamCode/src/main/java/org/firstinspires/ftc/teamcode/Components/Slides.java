@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Base.Component;
 public class Slides implements Component {
     private final DcMotor rightArm;
     private final DcMotor leftArm;
+    public ArmRotation rotation;
     public double PULSES_PER_REVOLUTION;
     public int LOWER_BOUND;
     public int ZERO_POSITION;
@@ -65,6 +66,7 @@ public class Slides implements Component {
         this.UPPER_BOUND = (int) (upperBound * PULSES_PER_REVOLUTION);
 
         this.isTeleOp = isTeleOp;
+        this.rotation = rotation;
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
@@ -103,30 +105,37 @@ public class Slides implements Component {
 
     public void toZero() {
         move(ZERO_POSITION);
+        rotation.toForward();
     }
 
     public void toGround() {
         move(GROUND_JUNCTION);
+        rotation.toForward();
     }
 
     public void toPickup() {
         move(PICKUP);
+        rotation.toForward();
     }
 
     public void toSideStack() {
         move(SIDE_STACK);
+        rotation.toForward();
     }
 
     public void toLow() {
         move(LOW_JUNCTION);
+        rotation.toBackward();
     }
 
     public void toMedium() {
         move(MEDIUM_JUNCTION);
+        rotation.toBackward();
     }
 
     public void toHigh() {
         move(HIGH_JUNCTION);
+        rotation.toBackward();
     }
 
     public void move(int position) {

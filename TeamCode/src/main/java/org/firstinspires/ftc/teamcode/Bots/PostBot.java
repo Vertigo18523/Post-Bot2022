@@ -34,7 +34,7 @@ public class PostBot extends Robot {
                 telemetry,
                 isTeleOp,
                 0,
-                -0.7848,
+                0.2394,
                 -0.0798
         );
         this.arm = new Slides(

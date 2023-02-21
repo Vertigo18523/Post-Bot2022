@@ -99,8 +99,9 @@ public class Slides implements Component {
         telemetry.addData("SlideTarget", targetPosition);
         telemetry.addData("SlideError", error);
         telemetry.addData("SlidePower", power);
-        return "Left: " + leftArm.getCurrentPosition() +
-                "\nRight: " + rightArm.getCurrentPosition();
+        telemetry.addData("Left", leftArm.getCurrentPosition());
+        telemetry.addData("Right", rightArm.getCurrentPosition());
+        return null;
     }
 
     public void toZero() {

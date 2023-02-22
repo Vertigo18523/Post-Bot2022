@@ -103,18 +103,23 @@ public class Right_Deliver1_5 extends BaseOpMode {
         parkingPosition = robot.camera.getParkingPosition();
         robot.grabber.close();
         robot.arm.toSideStack();
-        drive.followTrajectory(driveForward);
-        drive.followTrajectory(toPole);
+        drive.followTrajectoryAsync(driveForward);
+        drive.followTrajectoryAsync(toPole);
         for (i = 5; i > 0; i--) {
-            drive.followTrajectory(toStack);
-            drive.followTrajectory(stackToPole);
+            drive.followTrajectoryAsync(toStack);
+            drive.followTrajectoryAsync(stackToPole);
         }
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
-            drive.followTrajectory(left);
+            drive.followTrajectoryAsync(left);
         } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
-            drive.followTrajectory(right);
+            drive.followTrajectoryAsync(right);
         } else {
-            drive.followTrajectory(center);
+            drive.followTrajectoryAsync(center);
         }
+    }
+
+    @Override
+    public void onUpdate() throws InterruptedException {
+        drive.update();
     }
 }

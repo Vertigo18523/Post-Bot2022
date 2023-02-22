@@ -33,6 +33,7 @@ public class PostBot extends Robot {
                 hardwareMap,
                 telemetry,
                 isTeleOp,
+                arm,
                 0,
                 0.2394,
                 -0.0798

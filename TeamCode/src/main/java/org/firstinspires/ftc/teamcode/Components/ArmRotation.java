@@ -21,7 +21,7 @@ public class ArmRotation implements Component {
     public static int targetPosition = 0;
     public boolean isTeleOp;
     public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d, power;
-    public static double kP = 0.04, kD = 0;
+    public static double kP = 0.04, kD = 0, kG = 0;
     Telemetry telemetry;
 
     public ArmRotation(
@@ -60,7 +60,7 @@ public class ArmRotation implements Component {
     public void update() {
         error = targetPosition - getCurrentPosition();
         time = System.nanoTime() * 1e-9d;
-        power = ((kP * error) + (kD * -(error - prevError) / (time - prevTime)));
+        power = (kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (kG * Math.cos(Math.toRadians(targetPosition)));
         setPower(power);
         prevError = error;
         prevTime = time;

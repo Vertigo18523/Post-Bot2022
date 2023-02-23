@@ -59,7 +59,6 @@ public class Right_Deliver1_5 extends BaseOpMode {
                     robot.arm.toSideStack();
                 })
                 .splineToConstantHeading(new Vector2d(50,26),0)
-                .splineToConstantHeading(new Vector2d(50, 0), 0)
                 .splineToConstantHeading(new Vector2d(50,-28),0)
                 .addDisplacementMarker(() -> {
                     robot.arm.toSideStack();
@@ -103,18 +102,18 @@ public class Right_Deliver1_5 extends BaseOpMode {
         parkingPosition = robot.camera.getParkingPosition();
         robot.grabber.close();
         robot.arm.toSideStack();
-        drive.followTrajectoryAsync(driveForward);
-        drive.followTrajectoryAsync(toPole);
+        drive.followTrajectory(driveForward);
+        drive.followTrajectory(toPole);
         for (i = 5; i > 0; i--) {
-            drive.followTrajectoryAsync(toStack);
-            drive.followTrajectoryAsync(stackToPole);
+            drive.followTrajectory(toStack);
+            drive.followTrajectory(stackToPole);
         }
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
-            drive.followTrajectoryAsync(left);
+            drive.followTrajectory(left);
         } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
-            drive.followTrajectoryAsync(right);
+            drive.followTrajectory(right);
         } else {
-            drive.followTrajectoryAsync(center);
+            drive.followTrajectory(center);
         }
     }
 

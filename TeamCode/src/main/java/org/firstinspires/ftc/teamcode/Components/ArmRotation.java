@@ -30,7 +30,6 @@ public class ArmRotation implements Component {
         HardwareMap hardwareMap,
         Telemetry telemetry,
         boolean isTeleOp,
-        Slides arm,
         double init,
         double forward,
         double backward
@@ -44,8 +43,11 @@ public class ArmRotation implements Component {
         this.FORWARD = (int) (forward * PULSES_PER_REVOLUTION);
         this.BACKWARD = (int) (backward * PULSES_PER_REVOLUTION);
         this.isTeleOp = isTeleOp;
-        this.arm = arm;
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    }
+
+    public void addSlides(Slides arm) {
+        this.arm = arm;
     }
 
     @Override

@@ -33,7 +33,6 @@ public class PostBot extends Robot {
                 hardwareMap,
                 telemetry,
                 isTeleOp,
-                arm,
                 0,
                 0.2394,
                 -0.0798
@@ -55,6 +54,7 @@ public class PostBot extends Robot {
                 7.672 - 0.780,
                 7.802 - 0.780
         );
+        rotation.addSlides(arm);
         this.grabber = new Grabber(
                 opMode,
                 "grabber",

@@ -28,6 +28,7 @@ public class MainOp extends BaseOpMode {
     @Override
     public void onInit() throws InterruptedException {
         robot.grabber.open();
+        robot.rotation.toBackwardForce();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //        robot.camera.requestStart();
     }

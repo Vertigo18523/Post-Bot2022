@@ -65,7 +65,9 @@ public class ArmRotation implements Component {
     public void update() {
         error = targetPosition - getCurrentPosition();
         time = System.nanoTime() * 1e-9d;
-        power = (kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (kG * Math.cos(Math.toRadians(targetPosition * (PULSES_PER_REVOLUTION / 360))));
+        if (arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
+            power = (kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (kG * Math.cos(Math.toRadians(targetPosition * (PULSES_PER_REVOLUTION / 360))));
+        }
         setPower(power);
         prevError = error;
         prevTime = time;
@@ -108,14 +110,12 @@ public class ArmRotation implements Component {
     }
 
     public void move(int position) {
-        if (arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
-            targetPosition = position;
+        targetPosition = position;
 //            if (!isTeleOp) {
 //                while (isBusy()) {
 //                    update();
 //                }
 //            }
-        }
     }
 
     public void setPower(double motorPower) {

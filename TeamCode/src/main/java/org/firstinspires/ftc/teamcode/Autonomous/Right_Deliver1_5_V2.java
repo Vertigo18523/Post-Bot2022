@@ -82,17 +82,17 @@ public class Right_Deliver1_5_V2 extends BaseOpMode {
         parkingPosition = robot.camera.getParkingPosition();
         robot.grabber.close();
         robot.arm.toSideStack();
-        drive.followTrajectory(driveForward);
-        drive.followTrajectory(toPole1);
+        drive.followTrajectoryAsync(driveForward);
+        drive.followTrajectoryAsync(toPole1);
         robot.arm.toHigh();
         robot.rotation.toForward();
-        drive.followTrajectory(toPole2);
+        drive.followTrajectoryAsync(toPole2);
         robot.grabber.open();
         for (i = 5; i > 0; i--) {
-            drive.followTrajectory(toStack1);
+            drive.followTrajectoryAsync(toStack1);
             robot.rotation.move(0);
             robot.arm.toSideStack();
-            drive.followTrajectory(toStack2);
+            drive.followTrajectoryAsync(toStack2);
             robot.arm.toSideStack();
             robot.rotation.toForward();
             robot.arm.move((int) (0.289 * i * robot.arm.PULSES_PER_REVOLUTION)); // go down height of i cones
@@ -100,18 +100,18 @@ public class Right_Deliver1_5_V2 extends BaseOpMode {
             robot.rotation.move(0);
             robot.arm.toSideStack();
 
-            drive.followTrajectory(stackToPole1);
+            drive.followTrajectoryAsync(stackToPole1);
             robot.arm.toHigh();
             robot.rotation.toForward();
-            drive.followTrajectory(stackToPole2);
+            drive.followTrajectoryAsync(stackToPole2);
             robot.grabber.open();
         }
         if (parkingPosition == Camera.ParkingPosition.LEFT) {
-            drive.followTrajectory(left);
+            drive.followTrajectoryAsync(left);
         } else if (parkingPosition == Camera.ParkingPosition.RIGHT) {
-            drive.followTrajectory(right);
+            drive.followTrajectoryAsync(right);
         } else {
-            drive.followTrajectory(center);
+            drive.followTrajectoryAsync(center);
         }
     }
 

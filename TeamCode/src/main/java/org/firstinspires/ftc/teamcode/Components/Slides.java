@@ -141,11 +141,11 @@ public class Slides implements Component {
 
     public void move(int position) {
         targetPosition = position;
-        if (!isTeleOp) {
-            while (isBusy()) {
-                update();
-            }
-        }
+//        if (!isTeleOp) {
+//            while (isBusy()) {
+//                update();
+//            }
+//        }
     }
 
     public void setPower(double motorPower) {

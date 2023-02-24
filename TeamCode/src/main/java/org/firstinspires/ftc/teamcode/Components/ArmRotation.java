@@ -20,7 +20,7 @@ public class ArmRotation implements Component {
     public int FORWARD;
     public int BACKWARD;
     public static int targetPosition = 0;
-    public boolean isTeleOp;
+    public boolean isTeleOp, forcePosition;
     public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d, power;
     public static double kP = 0.04, kD = 0, kG = 0;
     Telemetry telemetry;
@@ -63,15 +63,22 @@ public class ArmRotation implements Component {
 
     @Override
     public void update() {
+        update(forcePosition);
+    }
+
+    public void update(boolean forcePosition) {
         error = targetPosition - getCurrentPosition();
         time = System.nanoTime() * 1e-9d;
-        if (arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
+        this.forcePosition = forcePosition;
+        if (forcePosition || arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
             power = (kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (kG * Math.cos(Math.toRadians(targetPosition * (PULSES_PER_REVOLUTION / 360))));
+        }
+        if (!isBusy()) {
+            this.forcePosition = false;
         }
         setPower(power);
         prevError = error;
         prevTime = time;
-
     }
 
     @Override
@@ -96,7 +103,8 @@ public class ArmRotation implements Component {
     }
 
     public void toBackwardForce() {
-        targetPosition = BACKWARD;
+        move(BACKWARD);
+        update(true);
     }
 
     public void toggle() {

@@ -93,6 +93,10 @@ public class ArmRotation implements Component {
         move(BACKWARD);
     }
 
+    public void toBackwardForce() {
+        targetPosition = BACKWARD;
+    }
+
     public void toggle() {
         if (getCurrentPosition() + error == BACKWARD) {
             toForward();
@@ -104,14 +108,13 @@ public class ArmRotation implements Component {
     }
 
     public void move(int position) {
-        if (arm.getCurrentPosition() <= (2.731 * arm.PULSES_PER_REVOLUTION)) {
-            arm.move((int) (2.731 * arm.PULSES_PER_REVOLUTION));
-        }
-        targetPosition = position;
-        if (!isTeleOp) {
-            while (isBusy()) {
-                update();
-            }
+        if (arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
+            targetPosition = position;
+//            if (!isTeleOp) {
+//                while (isBusy()) {
+//                    update();
+//                }
+//            }
         }
     }
 

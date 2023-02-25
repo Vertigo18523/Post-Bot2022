@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Calibration;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ReadWriteFile;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Components.Mecanum;
 import org.firstinspires.ftc.teamcode.RMath.Util;
 
 @Autonomous(group="Odometry")
+@Disabled
 public class OdoCalibration extends LinearOpMode {
 
     private boolean LEFT_REVERSED = true;

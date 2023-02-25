@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Calibration;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Components.Mecanum;
 
 
 @TeleOp(group = "calibration")
+@Disabled
 public class OdoTelemetryTeleOp extends BaseOpMode {
 
     private PostBot driveBot;

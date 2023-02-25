@@ -22,7 +22,7 @@ public class ArmRotation implements Component {
     public static int targetPosition = 0;
     public boolean isTeleOp, forcePosition;
     public double error, prevError = 0, time, prevTime = System.nanoTime() * 1e-9d, power;
-    public static double kP = 0.04, kD = 0, kG = 0;
+    public static double kP = 0.01, kD = 0, kG = 0;
     Telemetry telemetry;
 
     public ArmRotation(
@@ -38,7 +38,7 @@ public class ArmRotation implements Component {
 
         rotation.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        this.PULSES_PER_REVOLUTION = 751.8;
+        this.PULSES_PER_REVOLUTION = 2786.2;
         this.INIT = (int) (init * PULSES_PER_REVOLUTION);
         this.FORWARD = (int) (forward * PULSES_PER_REVOLUTION);
         this.BACKWARD = (int) (backward * PULSES_PER_REVOLUTION);
@@ -70,9 +70,9 @@ public class ArmRotation implements Component {
         error = targetPosition - getCurrentPosition();
         time = System.nanoTime() * 1e-9d;
         this.forcePosition = forcePosition;
-        if (forcePosition || arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
+//        if (forcePosition || arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
             power = (kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (kG * Math.cos(Math.toRadians(targetPosition * (PULSES_PER_REVOLUTION / 360))));
-        }
+//        }
         if (!isBusy()) {
             this.forcePosition = false;
         }
@@ -118,7 +118,9 @@ public class ArmRotation implements Component {
     }
 
     public void move(int position) {
-        targetPosition = position;
+        if (arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
+            targetPosition = position;
+        }
 //            if (!isTeleOp) {
 //                while (isBusy()) {
 //                    update();

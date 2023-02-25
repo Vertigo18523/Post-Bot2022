@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,22 +10,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Base.Component;
 
+@Config
 public class Grabber implements Component {
     private final Servo grabber;
 
     private final Telemetry telemetry;
     private final LinearOpMode opMode;
 
-    public double OPEN;
-    public double CLOSED;
+    public static double OPEN;
+    public static double CLOSED;
 
     public boolean isGrabbing;
 
     public Grabber(LinearOpMode opMode, String deviceName, HardwareMap hardwareMap, Telemetry telemetry, double open, double closed) {
         grabber = hardwareMap.get(Servo.class, deviceName);
-        this.OPEN = open;
-        this.CLOSED = closed;
-        this.telemetry = telemetry;
+        OPEN = open;
+        CLOSED = closed;
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.opMode = opMode;
     }
 
@@ -42,7 +46,10 @@ public class Grabber implements Component {
 
     @Override
     public String getTelemetry() {
-        return telemetry.toString();
+        telemetry.addData("GrabberCurrentPosition", grabber.getPosition());
+        telemetry.addData("GrabberTargetPosition", isGrabbing ? CLOSED : OPEN);
+        telemetry.addData("isGrabbing", isGrabbing);
+        return null;
     }
 
     public void toggle() {

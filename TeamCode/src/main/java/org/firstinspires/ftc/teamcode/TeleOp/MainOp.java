@@ -83,6 +83,10 @@ public class MainOp extends BaseOpMode {
             robot.arm.init();
         };
 
+        gamepadListener2.lsb.onPress = () -> {
+            robot.rotation.init();
+        };
+
 //        gamepadListener2.dr.onPress = () -> {
 //            robot.arm.toZero();
 //            sleep(100);
@@ -126,6 +130,10 @@ public class MainOp extends BaseOpMode {
             } else {
                 robot.arm.move((int) ((gamepad2.right_trigger - gamepad2.left_trigger) * robot.arm.PULSES_PER_REVOLUTION * 0.5) + robot.arm.getCurrentPosition());
             }
+        }
+
+        if (gamepad2.left_stick_y != 0) {
+            robot.rotation.setPower(gamepad2.left_stick_y);
         }
 
         robot.mecanum.drive(x * speed, y * speed, rot * speed);

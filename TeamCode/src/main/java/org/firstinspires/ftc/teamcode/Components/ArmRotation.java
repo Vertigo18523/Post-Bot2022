@@ -73,6 +73,9 @@ public class ArmRotation implements Component {
 //        if (forcePosition || arm.getCurrentPosition() > (2.731 * arm.PULSES_PER_REVOLUTION)) {
             power = (kP * error) + (kD * -(error - prevError) / (time - prevTime)) + (kG * Math.cos(Math.toRadians(targetPosition * (PULSES_PER_REVOLUTION / 360))));
 //        }
+        if (forcePosition) {
+            power = 0;
+        }
         if (!isBusy()) {
             this.forcePosition = false;
         }
@@ -103,7 +106,6 @@ public class ArmRotation implements Component {
     }
 
     public void toBackwardForce() {
-        move(BACKWARD);
         update(true);
     }
 

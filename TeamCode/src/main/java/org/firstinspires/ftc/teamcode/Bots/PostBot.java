@@ -34,7 +34,7 @@ public class PostBot extends Robot {
                 telemetry,
                 isTeleOp,
                 0,
-                0.301,
+                0.302,
                 0
         );
         this.arm = new Slides(
@@ -60,8 +60,8 @@ public class PostBot extends Robot {
                 "grabber",
                 hardwareMap,
                 telemetry,
-                0.35,
-                0.7
+                0.7,
+                0.35
         );
         if (isTeleOp) {
             this.mecanum = new Mecanum(hardwareMap, "frontLeft", "frontRight", "backLeft", "backRight", telemetry);
